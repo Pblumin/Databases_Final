@@ -3,19 +3,24 @@ from flask_mysqldb import MySQL
 import MySQLdb.cursors
 import re
 import sys
+from flask_sqlalchemy import SQLAlchemy
+import db_model
+import queries as q
 
 app = Flask(__name__)
 app.run(debug=False)
 
 app.secret_key = 'you gonna finish that'
 
-
-app.config['MYSQL_HOST'] = 'localhost'
+############### CHANGE THIS FOR UR SPECIC MACHINE ###############
+app.config['MYSQL_HOST'] = 'localhost' 
 app.config['MYSQL_USER'] = 'root'
 app.config['MYSQL_PASSWORD'] = 'Password123!'
 app.config['MYSQL_DB'] = 'RMP_DB'
 
 mysql = MySQL(app)
+
+#db = SQLAlchemy(app)
 
 @app.route('/')
 @app.route('/login', methods =['GET', 'POST'])
@@ -25,8 +30,9 @@ def login():
         username = request.form['uname']
         password = request.form['upass']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM USER WHERE uname = % s AND upass = % s', (username, password, ))
-        user = cursor.fetchone()
+        # cursor.execute('SELECT * FROM USER WHERE uname = % s AND upass = % s', (username, password, ))
+        # user = cursor.fetchone()
+        user = q.login_query(cursor,username,password)
         if user:
             session['loggedin'] = True
             session['id'] = user['uid']
@@ -51,10 +57,14 @@ def register():
         uname = request.form['uname']
         upass = request.form['upass']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        cursor.execute('SELECT * FROM USER WHERE uname = % s AND upass = % s', (uname, upass))
-        user = cursor.fetchone()
-        cursor.execute('SELECT max(uid) as maxID FROM USER')
-        max_id = cursor.fetchone()
+        # cursor.execute('SELECT * FROM USER WHERE uname = % s AND upass = % s', (uname, upass))
+        # user = cursor.fetchone()
+        user = q.register_query(cursor, uname, upass)
+        # cursor.execute('SELECT max(uid) as maxID FROM USER')
+        # max_id = cursor.fetchone()
+
+        max_id = q.max_user_id(cursor)
+
         print(max_id, file=sys.stderr)
         id = max_id.get('maxID') + 1
         if user:

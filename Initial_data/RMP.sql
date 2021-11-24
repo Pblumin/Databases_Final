@@ -107,6 +107,27 @@ ALSO I THINK WE SHOULD GET OF SEMESTER TAKEN
 MAYBE WE CAN GET RID OF OVERALL DIFF AS WELL*/
 insert into REVIEW values (1, 1, 1, 3, 5, 1, 'Awesome guy!');
 insert into REVIEW values (2, 7, 4, 1, 5, 1, 'DSA2 was easy for me! You need to be nice at coding tho.');
+insert into REVIEW values (3, 1, 1, 1, 4, 0, 'Awesome guy!');
+insert into REVIEW values (4, 2, 1, 3, 3, 1, 'Awesome guy!');
+insert into REVIEW values (5, 3, 1, 4, 2, 0, 'Awesome guy!');
+insert into REVIEW values (6, 4, 1, 2, 1, 1, 'Awesome guy!');
+insert into REVIEW values (7, 4, 1, 3, 2, 0, 'Awesome guy!');
+insert into REVIEW values (8, 3, 1, 5, 3, 1, 'Awesome guy!');
+insert into REVIEW values (9, 6, 1, 2, 4, 1, 'Awesome guy!');
+insert into REVIEW values (10, 6, 1, 1, 5, 0, 'Awesome guy!');
+insert into REVIEW values (11, 7, 1, 2, 3, 1, 'Awesome guy!');
+insert into REVIEW values (12, 7, 1, 3, 2, 0, 'Awesome guy!');
+insert into REVIEW values (13, 8, 1, 4, 1, 1, 'Awesome guy!');
+
+insert into REVIEW values (14, 9, 2, 2, 3, 1, 'Cool guy!');
+insert into REVIEW values (15, 9, 3, 3, 2, 0, 'Cool guy!');
+insert into REVIEW values (16, 9, 4, 4, 1, 1, 'Cool guy!');
+insert into REVIEW values (17, 10, 2, 2, 3, 1, 'Cool guy!');
+insert into REVIEW values (18, 10, 1, 3, 2, 0, 'Cool guy!');
+insert into REVIEW values (19, 10, 3, 4, 1, 1, 'Cool guy!');
+insert into REVIEW values (20, 7, 1, 2, 3, 1, 'Cool guy!');
+insert into REVIEW values (21, 5, 2, 3, 2, 0, 'Cool guy!');
+insert into REVIEW values (22, 2, 1, 4, 1, 1, 'Cool guy!');
 
 /*LIKES - lid, rid, user*/
 insert into LIKES values (1, 1, 1);
