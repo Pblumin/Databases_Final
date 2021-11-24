@@ -105,8 +105,8 @@ insert into USER values (4, 'NPR', 'fries');
 /*FIX IN PROPOSOAL THERE WERE TWO OVERALL REVIEWS; GET RID OF THE CHAR ONE
 ALSO I THINK WE SHOULD GET OF SEMESTER TAKEN
 MAYBE WE CAN GET RID OF OVERALL DIFF AS WELL*/
-insert into REVIEW values (1, 1, 1, 3, 5, 1, 'Awesome guy!')
-insert into REVIEW values (2, 7, 4, 1, 5, 1, 'DSA2 was easy for me! You need to be nice at coding tho.')
+insert into REVIEW values (1, 1, 1, 3, 5, 1, 'Awesome guy!');
+insert into REVIEW values (2, 7, 4, 1, 5, 1, 'DSA2 was easy for me! You need to be nice at coding tho.');
 
 /*LIKES - lid, rid, user*/
 insert into LIKES values (1, 1, 1);
