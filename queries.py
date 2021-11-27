@@ -103,15 +103,15 @@ DONE 13. get the % of people that would recommend professor (input professor)
 ------------- adding/update db -------------
 DONE 14. add a user 
 
-15. add a professor 
+DONE 15. add a professor 
 
-16. add a class
+DONE 16. add a class
 
-17. add a review
+LOOK INTO WHEN PROF PAGE DONE 17. add a review
 
-18. add a like
+LOOK INTO WHEN PROF PAGE DONE 18. add a like
 
-19. update professor exist count
+DONE 19. update professor exist count
 
 '''
 
@@ -147,6 +147,10 @@ def load_school_default(cursor):
 
 # NOT WORKING FIGURE OUT
 # http://www.silota.com/docs/recipes/sql-top-n-group.html
+
+#this query 
+#SELECT p.pname,s.sname,avg(r.overall) as avgoverall from PROFESSOR p, SCHOOL s, REVIEW r where p.sid=s.sid and r.pid=p.pid and p.existcount>=2 group by r.pid order by avgoverall desc;
+
 def top_3_prof(cursor):
 
     query = """ SELECT p.pname, s.sname, avg(r.overall) as avgRating,
@@ -360,7 +364,7 @@ def add_user(cursor, uname, upass):
     
     cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
 
-# Query 14 - add prof
+# Query 15 - add prof
 def add_prof(cursor, school, pname):
 
     max_id = max_prof_id(cursor)
@@ -372,7 +376,7 @@ def add_prof(cursor, school, pname):
     cursor.execute('INSERT INTO PROFESSOR VALUES (% s, % s, % s, % s)', 
     (id, sid, pname, 0 ))
 
-# Query 14 - add class
+# Query 16 - add class
 def add_class(cursor, cname, pname):
 
     max_id = max_class_id(cursor)
@@ -383,17 +387,20 @@ def add_class(cursor, cname, pname):
 
     cursor.execute('INSERT INTO CLASS VALUES (% s, % s, % s)', 
     (id, pid, cname))
-    
 
+# DO LATER WHEN PROF PAGE IS WORKING    
+def add_review(cursor):
+    pass
 
 # Query 18 - add a like
 
-# def add_like(cursor, rid, uid):
-#     max_id = max_user_id(cursor)
-#     id = max_id.get('maxID') + 1
-    
-#     cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
+# DO LATER WHEN PROF PAGE IS WORKING    
+def add_like(cursor, rid, uid):
 
+    max_id = max_user_id(cursor)
+    id = max_id.get('maxID') + 1
+    
+    cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, rid, uid ))
 
 # Query 19 - update professor exist count
 
