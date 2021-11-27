@@ -1,6 +1,6 @@
-drop table PROFESSOR;
-drop table CLASS;
-drop table REVIEW;
-drop table SCHOOL;
-drop table USER;
 drop table LIKES;
+drop table REVIEW;
+drop table USER;
+drop table CLASS;
+drop table PROFESSOR;
+drop table SCHOOL;

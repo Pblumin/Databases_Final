@@ -93,12 +93,12 @@ DONE 10. get average prof rating (input a prof)
 
 DONE 11. get average difficulty rating (input a prof)
 
-12. get all the reviews for a professor (input a prof):
+DONE 12. get all the reviews for a professor (input a prof):
     table that has the follow:
     diff, overall rating, recommend, description, num of likes
     order by like count
 
-13. get the % of people that would recommend professor (input professor)
+DONE 13. get the % of people that would recommend professor (input professor)
 
 ------------- adding/update db -------------
 DONE 14. add a user 
@@ -169,7 +169,7 @@ def get_prof_by_name(cursor, input):
                 GROUP BY p.pid
                 ORDER BY avg(r.overall) desc """
 
-    q1 = """SELECT p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+    q1 = """SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
             FROM PROFESSOR p, SCHOOL s, REVIEW r
             WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and p.pname LIKE """
     
@@ -194,7 +194,7 @@ def get_school_by_name(cursor, input):
                 GROUP BY s.sid
                 ORDER BY profCnt desc """
     
-    q1 = """SELECT s.sname, COUNT(p.pid) as profCnt
+    q1 = """SELECT s.sid, s.sname, COUNT(p.pid) as profCnt
             FROM SCHOOL s, PROFESSOR p
             WHERE p.sid=s.sid and s.sname LIKE"""
 
@@ -305,16 +305,105 @@ def get_avg_prof_diff(cursor, prof):
 #     table that has the follow:
 #     diff, overall rating, recommend, description, num of likes
 #     order by like count
-def get_avg_prof_diff(cursor, prof):
+def get_reviews(cursor, prof):
     likestr = "'%" + prof + "%' "
 
-    q1 = """SELECT r.diff, r.overall, r.recommend, r.description, r.
-            FROM PROFESSOR p, REVIEW r
-            WHERE p.pid=r.pid and p.pname LIKE"""
+    q1 = """SELECT r.difficulty, r.overall, r.recommend, r.description, count(l.lid) numOfLikes
+            FROM PROFESSOR p, REVIEW r, LIKES l
+            WHERE p.pid=r.pid and l.rid=r.rid and p.pname LIKE '%vul%' """
     
-    query = q1 + likestr
+    q2 = """GROUP BY l.rid
+            ORDER BY numOfLikes desc"""
+
+    # '''SELECT r.difficulty, r.overall, r.recommend, r.description, count(l.lid) numOfLikes
+    # FROM PROFESSOR p, REVIEW r, LIKES l
+    # WHERE p.pid=r.pid and l.rid=r.rid and p.pname LIKE '%vul%'
+    # GROUP BY l.rid
+    # ORDER BY numOfLikes desc'''
+
+    query = q1 + likestr + q2
     cursor.execute(query)
     avg_difficulty = cursor.fetchone()
 
     return avg_difficulty
 
+
+# Query 13
+
+def get_rec_perc(cursor, prof):
+
+    likestr = "'%" + prof + "%' "
+
+    testquery = """ SELECT p.pname, (sum(r.recommend)/count(r.rid)) as rec_prec
+                    FROM PROFESSOR p, REVIEW r
+                    WHERE p.pid=r.pid and p.pname LIKE '%neveen%'
+                    GROUP BY p.pid"""
+
+    q1 = """SELECT p.pname, (sum(r.recommend)/count(r.rid)) as rec_prec
+            FROM PROFESSOR p, REVIEW r
+            WHERE p.pid=r.pid and p.pname LIKE """
+
+    q2 = """GROUP BY p.pid"""
+
+    query = q1 + likestr + q2
+
+    cursor.execute(query)
+    recommend_percent = cursor.fetchone()
+
+    return recommend_percent
+
+# Query 14 - add user
+def add_user(cursor, uname, upass):
+
+    max_id = max_user_id(cursor)
+    id = max_id.get('maxID') + 1
+    
+    cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
+
+# Query 14 - add prof
+def add_prof(cursor, school, pname):
+
+    max_id = max_prof_id(cursor)
+    id = max_id.get('maxID') + 1
+
+    school_data = get_school_by_name(cursor, school)
+    sid = school_data.get('s.sid')
+
+    cursor.execute('INSERT INTO PROFESSOR VALUES (% s, % s, % s, % s)', 
+    (id, sid, pname, 0 ))
+
+# Query 14 - add class
+def add_class(cursor, cname, pname):
+
+    max_id = max_class_id(cursor)
+    id = max_id.get('maxID') + 1
+    
+    professor_data = get_prof_by_name(cursor, pname)
+    pid = professor_data.get('p.pid')
+
+    cursor.execute('INSERT INTO CLASS VALUES (% s, % s, % s)', 
+    (id, pid, cname))
+    
+
+
+# Query 18 - add a like
+
+# def add_like(cursor, rid, uid):
+#     max_id = max_user_id(cursor)
+#     id = max_id.get('maxID') + 1
+    
+#     cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
+
+
+# Query 19 - update professor exist count
+
+def inc_prof_existcount(cursor, prof):
+    
+    r1 = 'UPDATE professor as p \
+        SET existcount = existcount + 1 \
+        WHERE p.pname LIKE '
+
+    likestr = "'%" + prof + "%'"
+
+    
+    cursor.execute(r1 + likestr)

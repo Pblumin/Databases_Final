@@ -63,10 +63,10 @@ def register():
         # cursor.execute('SELECT max(uid) as maxID FROM USER')
         # max_id = cursor.fetchone()
 
-        max_id = q.max_user_id(cursor)
+        #max_id = q.max_user_id(cursor)
 
-        print(max_id, file=sys.stderr)
-        id = max_id.get('maxID') + 1
+        #print(max_id, file=sys.stderr)
+        #id = max_id.get('maxID') + 1
         if user:
             msg = 'Account already exists !'
         elif not re.match(r'[A-Za-z0-9]+', uname):
@@ -74,7 +74,8 @@ def register():
         elif not uname or not upass:
             msg = 'Please fill out the form !'
         else:
-            cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
+            #cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
+            q.add_user(cursor, uname, upass)
             mysql.connection.commit()
             msg = 'You have successfully registered !'
     elif request.method == 'POST':

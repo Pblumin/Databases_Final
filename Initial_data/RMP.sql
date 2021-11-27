@@ -162,9 +162,6 @@ insert into CLASS values (40, 29, 'Intro to Python');
 
 insert into CLASS values (41, 30, 'English');
 
-
-
-
 /*User - uid, uname, upass*/
 insert into USER values (1, 'Awesomephil7', '#ilovedb');
 insert into USER values (2, 'Pcucchi', 'plantplayer');
@@ -204,12 +201,21 @@ insert into REVIEW values (25, 17, 1, 5, 3, 1, 'Do not take this professor');
 insert into REVIEW values (26, 18, 1, 2, 4, 1, 'A lot of assignments!');
 insert into REVIEW values (27, 19, 1, 1, 5, 0, 'Gives no homework!');
 insert into REVIEW values (28, 20, 1, 2, 3, 1, 'Ends class early!');
-insert into REVIEW values (28, 21, 1, 2, 3, 1, 'Awesome guy!');
-insert into REVIEW values (28, 22, 1, 2, 3, 1, 'Awesome guy!');
-insert into REVIEW values (28, 23, 1, 2, 3, 1, 'Awesome guy!');
+insert into REVIEW values (29, 21, 1, 2, 3, 1, 'Awesome guy!');
+insert into REVIEW values (30, 22, 1, 2, 3, 1, 'Awesome guy!');
+insert into REVIEW values (31, 23, 1, 2, 3, 1, 'Awesome guy!');
 
 
 /*LIKES - lid, rid, user*/
 insert into LIKES values (1, 1, 1);
 insert into LIKES values (2, 1, 2);
 insert into LIKES values (3, 1, 3);
+insert into LIKES values (4, 2, 1);
+insert into LIKES values (5, 2, 2);
+insert into LIKES values (6, 3, 3);
+insert into LIKES values (7, 4, 1);
+insert into LIKES values (8, 4, 2);
+insert into LIKES values (9, 4, 3);
+insert into LIKES values (10, 2, 1);
+insert into LIKES values (11, 3, 2);
+insert into LIKES values (12, 5, 3);
