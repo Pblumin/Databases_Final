@@ -148,7 +148,7 @@ def load_school_default(cursor):
 # NOT WORKING FIGURE OUT
 # http://www.silota.com/docs/recipes/sql-top-n-group.html
 
-#this query 
+#this query gives the top rat
 #SELECT p.pname,s.sname,avg(r.overall) as avgoverall from PROFESSOR p, SCHOOL s, REVIEW r where p.sid=s.sid and r.pid=p.pid and p.existcount>=2 group by r.pid order by avgoverall desc;
 
 def top_3_prof(cursor):
