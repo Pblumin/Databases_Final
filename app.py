@@ -38,7 +38,7 @@ def login():
             session['id'] = user['uid']
             session['uname'] = user['uname']
             msg = 'Logged in successfully !'
-            return render_template('index.html', msg = msg)
+            return render_template('index2.html', msg = msg)
         else:
             msg = 'Incorrect username / password !'
     return render_template('login.html', msg = msg)
@@ -57,16 +57,9 @@ def register():
         uname = request.form['uname']
         upass = request.form['upass']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        # cursor.execute('SELECT * FROM USER WHERE uname = % s AND upass = % s', (uname, upass))
-        # user = cursor.fetchone()
+
         user = q.register_query(cursor, uname, upass)
-        # cursor.execute('SELECT max(uid) as maxID FROM USER')
-        # max_id = cursor.fetchone()
 
-        #max_id = q.max_user_id(cursor)
-
-        #print(max_id, file=sys.stderr)
-        #id = max_id.get('maxID') + 1
         if user:
             msg = 'Account already exists !'
         elif not re.match(r'[A-Za-z0-9]+', uname):
@@ -81,3 +74,23 @@ def register():
     elif request.method == 'POST':
         msg = 'Please fill out the form !'
     return render_template('register.html', msg = msg)
+
+@app.route('/professor_default', methods = ['GET', 'POST'])
+def professor_default():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_default(cursor)
+
+    # dict_prof_table = {}
+    # for i in prof_default_table
+    #print(prof_default_table)
+    return render_template('professors.html', prof_default_table=prof_default_table)
+
+@app.route('/prof_info', methods = ['GET', 'POST'])
+def prof_info():
+    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # prof_default_table = q.load_prof_default(cursor)
+
+    # dict_prof_table = {}
+    # for i in prof_default_table
+    #print(prof_default_table)
+    return render_template('prof_info.html')

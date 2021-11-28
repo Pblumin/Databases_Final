@@ -125,7 +125,7 @@ def load_prof_default(cursor):
                 ORDER BY avg(r.overall) desc """
 
     cursor.execute(query)
-    prof_default_table = cursor.fetchone()
+    prof_default_table = cursor.fetchall()
 
     return prof_default_table
 
