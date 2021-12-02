@@ -118,7 +118,7 @@ DONE 19. update professor exist count
 # Query 1
 def load_prof_default(cursor):
 
-    query = """ SELECT p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+    query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
                 WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
                 GROUP BY p.pid
@@ -134,14 +134,14 @@ def load_prof_default(cursor):
 #     table that has school and top 3 professors
 #     order by school (on front end also will see query 6)
 def load_school_default(cursor):
-    query = """ SELECT s.sname, COUNT(p.pid) as profCnt
+    query = """ SELECT s.sid, s.sname, COUNT(p.pid) as profCnt
                 FROM SCHOOL s, PROFESSOR p
                 WHERE p.sid=s.sid
                 GROUP BY s.sid
                 ORDER BY profCnt desc """
 
     cursor.execute(query)
-    school_default_table = cursor.fetchone()
+    school_default_table = cursor.fetchall()
 
     return school_default_table
 
@@ -159,7 +159,7 @@ def top_3_prof(cursor):
                 WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and rank <= 1"""
     
     cursor.execute(query)
-    top_3_prof = cursor.fetchone()
+    top_3_prof = cursor.fetchall()
 
     return top_3_prof
 
@@ -183,7 +183,7 @@ def get_prof_by_name(cursor, input):
     query = q1 + likestr + q2 
 
     cursor.execute(query)
-    prof = cursor.fetchone()
+    prof = cursor.fetchall()
 
     return prof
 
@@ -208,7 +208,7 @@ def get_school_by_name(cursor, input):
     query = q1 + likestr + q2 
 
     cursor.execute(query)
-    school = cursor.fetchone()
+    school = cursor.fetchall()
 
     return school
 
@@ -238,7 +238,7 @@ def get_prof_by_class(cursor, input):
     query = q1 + likestr + q2
 
     cursor.execute(query)
-    prof = cursor.fetchone()
+    prof = cursor.fetchall()
 
     return prof
 
@@ -271,7 +271,7 @@ def get_classes_by_prof(cursor, input):
     query = q1 + likestr
 
     cursor.execute(query)
-    class_list = cursor.fetchone()
+    class_list = cursor.fetchall()
 
     return class_list
 
@@ -301,7 +301,7 @@ def get_avg_prof_diff(cursor, prof):
     
     query = q1 + likestr
     cursor.execute(query)
-    avg_difficulty = cursor.fetchone()
+    avg_difficulty = cursor.fetchall()
 
     return avg_difficulty
 
@@ -327,7 +327,7 @@ def get_reviews(cursor, prof):
 
     query = q1 + likestr + q2
     cursor.execute(query)
-    avg_difficulty = cursor.fetchone()
+    avg_difficulty = cursor.fetchall()
 
     return avg_difficulty
 
@@ -352,7 +352,7 @@ def get_rec_perc(cursor, prof):
     query = q1 + likestr + q2
 
     cursor.execute(query)
-    recommend_percent = cursor.fetchone()
+    recommend_percent = cursor.fetchall()
 
     return recommend_percent
 

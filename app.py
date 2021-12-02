@@ -85,6 +85,16 @@ def professor_default():
     #print(prof_default_table)
     return render_template('professors.html', prof_default_table=prof_default_table)
 
+@app.route('/school_default', methods = ['GET', 'POST'])
+def school_default():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    school_default_table = q.load_school_default(cursor)
+
+    # dict_prof_table = {}
+    # for i in prof_default_table
+    print(school_default_table)
+    return render_template('schools.html', school_default_table=school_default_table)
+
 @app.route('/prof_info', methods = ['GET', 'POST'])
 def prof_info():
     # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
