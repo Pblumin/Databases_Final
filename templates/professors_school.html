@@ -34,17 +34,17 @@
                 Filter
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="{{ url_for('professor_default') }}">Rating high to low</a>
-                <a class="dropdown-item" href="{{ url_for('professor_reverse') }}">Rating low to high</a>
-                <a class="dropdown-item" href="{{ url_for('professor_diff') }}">Difficulty high to low</a>
-                <a class="dropdown-item" href="{{ url_for('professor_diff_reverse') }}">Difficulty low to high</a>
+                <a class="dropdown-item" href= "{{ url_for('professor_by_school', sid = sid ) }}" >Rating high to low</a>
+                <a class="dropdown-item" href="{{ url_for('professor_by_school_rev', sid = sid ) }}">Rating low to high</a>
+                <a class="dropdown-item" href="#">Difficulty high to low</a>
+                <a class="dropdown-item" href="#">Difficulty low to high</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Something else here</a>
               </div>
             </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2"  type="search" placeholder="Search" aria-label="Search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>

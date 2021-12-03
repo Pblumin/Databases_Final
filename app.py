@@ -80,9 +80,6 @@ def professor_default():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     prof_default_table = q.load_prof_default(cursor)
 
-    # dict_prof_table = {}
-    # for i in prof_default_table
-    #print(prof_default_table)
     return render_template('professors.html', prof_default_table=prof_default_table)
 
 @app.route('/professor_reverse', methods = ['GET', 'POST'])
@@ -90,9 +87,20 @@ def professor_reverse():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     prof_default_table = q.load_prof_reverse(cursor)
 
-    # dict_prof_table = {}
-    # for i in prof_default_table
-    #print(prof_default_table)
+    return render_template('professors.html', prof_default_table=prof_default_table)
+
+@app.route('/professor_diff', methods = ['GET', 'POST'])
+def professor_diff():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_diff(cursor)
+
+    return render_template('professors.html', prof_default_table=prof_default_table)
+
+@app.route('/professor_diff_reverse', methods = ['GET', 'POST'])
+def professor_diff_reverse():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_diff_reverse(cursor)
+
     return render_template('professors.html', prof_default_table=prof_default_table)
 
 @app.route('/school_default', methods = ['GET', 'POST'])
@@ -100,9 +108,6 @@ def school_default():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     school_default_table = q.load_school_default(cursor)
 
-    # dict_prof_table = {}
-    # for i in prof_default_table
-    print(school_default_table)
     return render_template('schools.html', school_default_table=school_default_table)
 
 @app.route('/prof_info/<pid>', methods = ['GET', 'POST'])
@@ -113,7 +118,6 @@ def prof_info(pid):
     review_table = q.get_reviews(cursor, pid)
     rec_perc = q.get_rec_perc(cursor, pid)
 
-    print(review_table)
     return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
 
 @app.route('/professor_by_school/<sid>', methods = ['GET', 'POST'])
@@ -121,7 +125,30 @@ def professor_by_school(sid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     prof_default_table = q.load_prof_by_school(cursor,sid)
 
-    # dict_prof_table = {}
-    # for i in prof_default_table
-    #print(prof_default_table)
-    return render_template('professors.html', prof_default_table=prof_default_table)
+    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+
+@app.route('/professor_by_school_rev/<sid>', methods = ['GET', 'POST'])
+def professor_by_school_rev(sid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_by_school_rev(cursor,sid)
+
+    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+
+# @app.route('/professor_by_name/<sid>', methods = ['GET', 'POST'])
+# def professor_by_school_rev(sid):
+#     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#     prof_default_table = q.get_prof_by_name(cursor,input)
+
+#     if request.method == "POST":
+#         db = MySQLdb.connect(user="root", passwd="", db="cs324", host="127.0.0.1")
+#         c=db.cursor()
+#         c.executemany('''select * from student where name = %s''', request.form['search'])
+#         for r in c.fetchall():
+#             print r[0],r[1],r[2]
+#             return redirect(url_for('search'))
+#     return render_template('search.html')
+
+    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # prof_default_table = q.load_prof_by_school_rev(cursor,sid)
+
+    # return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
