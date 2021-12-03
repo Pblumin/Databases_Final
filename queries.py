@@ -129,6 +129,18 @@ def load_prof_default(cursor):
 
     return prof_default_table
 
+def load_prof_by_school(cursor, sid):
+
+    q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM PROFESSOR p, SCHOOL s, REVIEW r
+                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+    q2 = """ GROUP BY p.pid
+            ORDER BY avg(r.overall) desc """
+    query = q1 + str(sid) + q2
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table
 # Query 2
 # 2. when you click on schools tab see the following:
 #     table that has school and top 3 professors
@@ -157,8 +169,6 @@ def top_3_prof(cursor):
                 row_number() over (partition by s.sname order by avgRating desc) as rank 
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
                 WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and rank <= 1"""
-    
-    cursor.execute(query)
     top_3_prof = cursor.fetchall()
 
     return top_3_prof
@@ -187,6 +197,23 @@ def get_prof_by_name(cursor, input):
 
     return prof
 
+def get_prof_by_id(cursor, id):
+    
+    #likestr = str(id)
+
+    q1 = """SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+            FROM PROFESSOR p, SCHOOL s, REVIEW r
+            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and p.pid =  """
+    
+
+    query = q1 + str(id)
+
+    cursor.execute(query)
+    prof = cursor.fetchall()
+
+    return prof
+
+
 # Query 4
 def get_school_by_name(cursor, input):
 
@@ -211,6 +238,7 @@ def get_school_by_name(cursor, input):
     school = cursor.fetchall()
 
     return school
+
 
 # Query 5
 def get_prof_by_class(cursor, input):
@@ -256,9 +284,9 @@ def prof_count(cursor):
     return prof_cnt_table
 
 # Query 7
-def get_classes_by_prof(cursor, input):
+def get_classes_by_prof(cursor, pid):
 
-    likestr = "'%" + input + "%' "
+    #likestr = "'%" + input + "%' "
     
     testquery = """SELECT p.pname, c.cname
                     FROM PROFESSOR p, CLASS c
@@ -266,9 +294,9 @@ def get_classes_by_prof(cursor, input):
 
     q1 = """SELECT p.pname, c.cname
             FROM PROFESSOR p, CLASS c
-            WHERE c.pid=p.pid and p.pname LIKE """
+            WHERE c.pid=p.pid and p.pid="""
 
-    query = q1 + likestr
+    query = q1 + str(pid)
 
     cursor.execute(query)
     class_list = cursor.fetchall()
@@ -309,15 +337,21 @@ def get_avg_prof_diff(cursor, prof):
 #     table that has the follow:
 #     diff, overall rating, recommend, description, num of likes
 #     order by like count
-def get_reviews(cursor, prof):
-    likestr = "'%" + prof + "%' "
-
-    q1 = """SELECT r.difficulty, r.overall, r.recommend, r.description, count(l.lid) numOfLikes
+# HAD TO GET RID OF LIKES COUNT FOR NOW CAUSE THERES A ISSUE WHEN THERE R NO LIKES  
+def get_reviews(cursor, pid):
+    # likestr = "'%" + prof + "%' "
+    testq = """SELECT r.rid, r.difficulty, r.overall, r.recommend, r.description, count(l.lid) numOfLikes
             FROM PROFESSOR p, REVIEW r, LIKES l
-            WHERE p.pid=r.pid and l.rid=r.rid and p.pname LIKE '%vul%' """
-    
-    q2 = """GROUP BY l.rid
+            WHERE p.pid=r.pid and l.rid=r.rid and p.pid = 7
+            GROUP BY l.rid
             ORDER BY numOfLikes desc"""
+
+    q1 = """SELECT r.rid, r.difficulty, r.overall, r.recommend, r.description
+            FROM PROFESSOR p, REVIEW r
+            WHERE p.pid=r.pid and p.pid = """
+    
+    # q2 = """ GROUP BY l.rid
+    #         ORDER BY numOfLikes desc"""
 
     # '''SELECT r.difficulty, r.overall, r.recommend, r.description, count(l.lid) numOfLikes
     # FROM PROFESSOR p, REVIEW r, LIKES l
@@ -325,31 +359,29 @@ def get_reviews(cursor, prof):
     # GROUP BY l.rid
     # ORDER BY numOfLikes desc'''
 
-    query = q1 + likestr + q2
+    query = q1 + str(pid)
     cursor.execute(query)
-    avg_difficulty = cursor.fetchall()
+    reviews = cursor.fetchall()
 
-    return avg_difficulty
+    return reviews
 
 
 # Query 13
 
-def get_rec_perc(cursor, prof):
+def get_rec_perc(cursor, pid):
 
-    likestr = "'%" + prof + "%' "
+    # likestr = "'%" + prof + "%' "
 
     testquery = """ SELECT p.pname, (sum(r.recommend)/count(r.rid)) as rec_prec
                     FROM PROFESSOR p, REVIEW r
                     WHERE p.pid=r.pid and p.pname LIKE '%neveen%'
                     GROUP BY p.pid"""
 
-    q1 = """SELECT p.pname, (sum(r.recommend)/count(r.rid)) as rec_prec
+    q1 = """SELECT ((sum(r.recommend)/count(r.rid)) * 100) as rec_prec
             FROM PROFESSOR p, REVIEW r
-            WHERE p.pid=r.pid and p.pname LIKE """
+            WHERE p.pid=r.pid and p.pid = """
 
-    q2 = """GROUP BY p.pid"""
-
-    query = q1 + likestr + q2
+    query = q1 + str(pid) 
 
     cursor.execute(query)
     recommend_percent = cursor.fetchall()

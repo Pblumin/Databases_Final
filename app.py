@@ -95,12 +95,23 @@ def school_default():
     print(school_default_table)
     return render_template('schools.html', school_default_table=school_default_table)
 
-@app.route('/prof_info', methods = ['GET', 'POST'])
-def prof_info():
-    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    # prof_default_table = q.load_prof_default(cursor)
+@app.route('/prof_info/<pid>', methods = ['GET', 'POST'])
+def prof_info(pid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_table = q.get_prof_by_id(cursor, pid)
+    class_table = q.get_classes_by_prof(cursor, pid)
+    review_table = q.get_reviews(cursor, pid)
+    rec_perc = q.get_rec_perc(cursor, pid)
+
+    print(review_table)
+    return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
+
+@app.route('/professor_by_school/<sid>', methods = ['GET', 'POST'])
+def professor_by_school(sid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_by_school(cursor,sid)
 
     # dict_prof_table = {}
     # for i in prof_default_table
     #print(prof_default_table)
-    return render_template('prof_info.html')
+    return render_template('professors.html', prof_default_table=prof_default_table)

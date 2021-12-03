@@ -48,7 +48,7 @@
             {{ school.get('sname') }} |
             Number of Professors: {{ school.get('profCnt') }} <br/>
 
-            <a href="{{ url_for('prof_info') }}" class="btn">View</a>
+            <a href = "{{ url_for('professor_by_school', sid = school.get('sid')) }}" class='btn'>view</a>
           {% endfor %}
         </p>
     </div> 

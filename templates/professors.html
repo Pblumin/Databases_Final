@@ -50,7 +50,9 @@
             Rating: {{ professor.get('avgRating') }} |
             Difficulty:  {{ professor.get('avgDiff') }} <br/>
 
-            <a href="{{ url_for('prof_info') }}" class="btn">View</a>
+            <!-- <a href="{{ url_for('prof_info',pid = professor.get('pid')) }}" class="btn">View</a> -->
+            <a href = "{{ url_for('prof_info', pid = professor.get('pid')) }}" class='btn'>view</a>
+
           {% endfor %}
         </p>
     </div> 
