@@ -85,6 +85,16 @@ def professor_default():
     #print(prof_default_table)
     return render_template('professors.html', prof_default_table=prof_default_table)
 
+@app.route('/professor_reverse', methods = ['GET', 'POST'])
+def professor_reverse():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_reverse(cursor)
+
+    # dict_prof_table = {}
+    # for i in prof_default_table
+    #print(prof_default_table)
+    return render_template('professors.html', prof_default_table=prof_default_table)
+
 @app.route('/school_default', methods = ['GET', 'POST'])
 def school_default():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)

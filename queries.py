@@ -129,6 +129,19 @@ def load_prof_default(cursor):
 
     return prof_default_table
 
+def load_prof_reverse(cursor):
+
+    query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM PROFESSOR p, SCHOOL s, REVIEW r
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                GROUP BY p.pid
+                ORDER BY avg(r.overall) """
+
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table
+
 def load_prof_by_school(cursor, sid):
 
     q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
