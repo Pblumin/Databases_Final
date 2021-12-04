@@ -268,23 +268,24 @@ def professor_by_school_abc(sid):
 
 @app.route('/update_existcount', methods = ['GET', 'POST'])
 def update_existcount():
-    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    print("gets to first line")
+    pass
+    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    # print("gets to first line")
     
-    profname = request.args.post('profname')
-    profschool = request.args.post('profschool')
-    profclasses = request.args.post('profclasses')
-    print("makes it to here")
+    # profname = request.form['profname']
+    # profschool = request.form['profschool']
+    # profclasses = request.form['profclasses']
+    # print("makes it to here")
     
-    q.inc_prof_existcount(cursor, profname)
-    # if prof:
-    #     q.add_user(cursor, uname, upass)
-    print("query is good")
+    # q.inc_prof_existcount(cursor, profname)
+    # # if prof:
+    # #     q.add_user(cursor, uname, upass)
+    # print("query is good")
 
-    mysql.connection.commit()
-    print("commit is good")
-    msg = 'Professor has Been Updated !'
-    return render_template('update_existcount.html')
+    # mysql.connection.commit()
+    # print("commit is good")
+    # msg = 'Professor has Been Updated !'
+    # return render_template('update_existcount.html', msg = msg)
     # else:
     #     msg = 'Incorrect username / password !'
     # if input == None:
@@ -293,7 +294,7 @@ def update_existcount():
     # prof_default_table = q.get_prof_by_name(cursor,input)
     # return render_template('professors.html', prof_default_table=prof_default_table)
 
-    # return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+    return render_template('update_existcount.html')
 
 
 # @app.route('/professor_by_name', methods = ['GET', 'POST'])

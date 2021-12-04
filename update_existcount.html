@@ -113,19 +113,15 @@
               </div>
             </li>
           </ul>
-          <p>Search By Professor:     </p>
-          <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" name="search">
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-          </form>
+          
         </div>
     </nav>
 
     <div class="container"> 
         <h1>Is your favorite/least favorite professor not listed?</h1>
         
-        <div class="form-popup" i   d="myForm">
-          <form action="{{ url_for('update_existscount') }}" class="form-container" method="post">
+        <div class="form-popup" id="myForm">
+          <form action="{{ url_for('update_existcount') }}" class="form-container" method="post">
             <h2>Enter the Professor's Details Here</h2>
         
             <label for="profname"><b>Professor Name</b></label>
@@ -137,11 +133,11 @@
             <label for="profclasses"><b>Classes</b></label>
             <input type="text" placeholder="Enter Classes(separate by commas)" name="profclasses" required>
         
-            <button type="submit" class="btn" href="/update_existscount">Submit</button>
+            <button type="submit" class="btn" href="/update_existcount">Submit</button>
             <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
           </form>
         </div>
-
+    </div>
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

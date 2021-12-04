@@ -575,7 +575,7 @@ def add_like(cursor, rid, uid):
     print("lid: ", id)
     print("rid: ", rid)
     print("uid: ", uid)
-    
+   
     cursor.execute('INSERT INTO LIKES VALUES (% s, % s, % s)', (id, rid, uid ))
 
 # Query 19 - update professor exist count
