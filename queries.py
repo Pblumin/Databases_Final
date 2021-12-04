@@ -582,7 +582,7 @@ def add_like(cursor, rid, uid):
 
 def inc_prof_existcount(cursor, prof):
     
-    r1 = 'UPDATE professor as p \
+    r1 = 'UPDATE PROFESSOR as p \
         SET existcount = existcount + 1 \
         WHERE p.pname LIKE '
 
@@ -590,6 +590,8 @@ def inc_prof_existcount(cursor, prof):
 
     
     cursor.execute(r1 + likestr)
+
+    return 1;
 
 def get_pid(cursor, rid):
 

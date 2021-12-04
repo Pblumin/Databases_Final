@@ -14,9 +14,13 @@ app.run(debug=False)
 app.secret_key = 'you gonna finish that'
 
 ############### CHANGE THIS FOR UR SPECIC MACHINE ###############
+# app.config['MYSQL_HOST'] = 'localhost' 
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = 'Password123!'
+# app.config['MYSQL_DB'] = 'RMP_DB'
 app.config['MYSQL_HOST'] = 'localhost' 
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Password123!'
+app.config['MYSQL_USER'] = 'paul'
+app.config['MYSQL_PASSWORD'] = 'password'
 app.config['MYSQL_DB'] = 'RMP_DB'
 
 mysql = MySQL(app)
@@ -266,57 +270,27 @@ def professor_by_school_abc(sid):
 ############################# LIKES STUFF #############################
 
 
-@app.route('/update_existcount', methods = ['GET', 'POST'])
-def update_existcount():
-    pass
-    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    # print("gets to first line")
-    
-    # profname = request.form['profname']
-    # profschool = request.form['profschool']
-    # profclasses = request.form['profclasses']
-    # print("makes it to here")
-    
-    # q.inc_prof_existcount(cursor, profname)
-    # # if prof:
-    # #     q.add_user(cursor, uname, upass)
-    # print("query is good")
+@app.route('/add_prof_form', methods = ['GET','POST'])
+def add_prof_form():
+    msg = ''
+    if request.method == 'POST' and 'profname' in request.form and 'profschool' in request.form and 'profclasses' in request.form:
+        profname = request.form['profname']
+        # So thinking we could just use these to query for more 
+        # specific professors or ignore them entirely - he wont care
+        # maybe we could just upadte these to all resulting professors
+        # profschool = request.form['profschool']
+        # profclasses = request.form['profclasses']
 
-    # mysql.connection.commit()
-    # print("commit is good")
-    # msg = 'Professor has Been Updated !'
-    # return render_template('update_existcount.html', msg = msg)
-    # else:
-    #     msg = 'Incorrect username / password !'
-    # if input == None:
-        # prof_default_table = q.load_prof_by_school_abc(cursor)
-    # else:
-    # prof_default_table = q.get_prof_by_name(cursor,input)
-    # return render_template('professors.html', prof_default_table=prof_default_table)
+        # also check if the existcount is actually updated
+        cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-    return render_template('update_existcount.html')
+        prof = q.inc_prof_existcount(cursor, profname)
+        if prof:
+            msg = 'Thank you for updating the database !'
 
+            return render_template('add_prof_form.html', msg = msg)
+        else:
+            msg = 'Professor is not in our database'
+    return render_template('add_prof_form.html', msg = msg)
 
-# @app.route('/professor_by_name', methods = ['GET', 'POST'])
-# def professor_by_name():
-#     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-#     input = request.form['search']
-#     prof_default_table = q.get_prof_by_name(cursor,input)
-    
-#     print(prof_default_table)
-#     print(input)
-#     return render_template('professors.html', prof_default_table=prof_default_table)
-
-#     if request.method == "POST":
-#         db = MySQLdb.connect(user="root", passwd="", db="cs324", host="127.0.0.1")
-#         c=db.cursor()
-#         c.executemany('''select * from student where name = %s''', request.form['search'])
-#         for r in c.fetchall():
-#             print r[0],r[1],r[2]
-#             return redirect(url_for('search'))
-#     return render_template('search.html')
-
-    # cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    # prof_default_table = q.load_prof_by_school_rev(cursor,sid)
-
-    # return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+   

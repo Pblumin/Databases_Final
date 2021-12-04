@@ -31,7 +31,7 @@
               <a class="nav-link" href="/school_default">Schools</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/update_existcount">Add a professor</a>
+              <a class="nav-link" href="/add_prof_form">Add a professor</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -78,14 +78,14 @@
                   <button class="open-button" onclick="openForm()">Open Form</button>
               
                   <div class="form-popup" id="myForm">
-                    <form action="{{ url_for('update_existscount') }}" class="form-container" method="post">
+                    <form action="{{ url_for('app_prof_form') }}" class="form-container" method="post">
                       <h1>Enter the Professor's Details</h1>
                   
                       <label for="profname"><b>Professor Name</b></label>
                       <input type="text" placeholder="Enter Name" name="profname" required>
                   
                       <label f
-                  <button type="submit" class="btn" href="/update_existscount">Submit</button>
+                  <button type="submit" class="btn" href="/add_prof_form">Submit</button>
                   <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
                 </form>
               </div>
