@@ -9,9 +9,10 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Database of Professors</title>
+    
   </head>
   <body>
-
+    
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/login">{{session.uname}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,20 +30,23 @@
             <li class="nav-item">
               <a class="nav-link" href="/school_default">Schools</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/update_existcount">Add a professor</a>
+            </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Dropdown
               </a>
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                <a class="dropdown-item" href="#">Action</a>
-                <a class="dropdown-item" href="#">Another action</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
+                <a class="dropdown-item" href="{{ url_for('school_default') }}">Professor count high to low</a>
+                <a class="dropdown-item" href="{{ url_for('school_reverse') }}">Professor count low to high</a>
+                <a class="dropdown-item" href="{{ url_for('school_abc') }}">Alphabetical</a>
               </div>
             </li>
           </ul>
+          <p>Search By Professor:     </p>
           <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" name="search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
@@ -50,11 +54,45 @@
       
     <div class="container"> 
         <h1>Schools...</h1>
+        
 
         <p> 
           {% for school in school_default_table %}
             <p> ______________________________________________________________________________ </p>
-
+            <div class="container"> 
+              <h1>Schools...</h1>
+              <button class="open-button" onclick="openForm()">Open Form</button>
+              
+              <div class="form-popup" id="myForm">
+                <form action="{{ url_for('update_existscount') }}" class="form-container" method="post">
+                  <h1>Enter the Professor's Details</h1>
+              
+                  <label for="profname"><b>Professor Name</b></label>
+                  <input type="text" placeholder="Enter Name" name="profname" required>
+              
+                  <label for="profschool"><b>School</b></label>
+                  <input type="text" placeholder="Enter School" name="profschool" required>
+      
+                  <label for="profclasses"><b>Classes</b></label>
+                  <input type="text" placeholder="Enter Classes(separate by commas)" name="profclasses" required>
+                  <button class="open-button" onclick="openForm()">Open Form</button>
+              
+                  <div class="form-popup" id="myForm">
+                    <form action="{{ url_for('update_existscount') }}" class="form-container" method="post">
+                      <h1>Enter the Professor's Details</h1>
+                  
+                      <label for="profname"><b>Professor Name</b></label>
+                      <input type="text" placeholder="Enter Name" name="profname" required>
+                  
+                      <label f
+                  <button type="submit" class="btn" href="/update_existscount">Submit</button>
+                  <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+                </form>
+              </div>
+      
+              <p> 
+                {% for school in school_default_table %}
+                  <p> _____
             {{ school.get('sname') }} |
             Number of Professors: {{ school.get('profCnt') }} <br/>
 
@@ -68,5 +106,14 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script>
+      function openForm() {
+        document.getElementById("myForm").style.display = "block";
+      }
+      
+      function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+      }
+    </script>
   </body>
 </html>

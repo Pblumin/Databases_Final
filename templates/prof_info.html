@@ -14,7 +14,42 @@
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/login">{{session.uname}}</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button class="<!doctype html>
+          <html lang="en">
+            <head>
+              <!-- Required meta tags -->
+              <meta charset="utf-8">
+              <meta name="<!doctype html>
+              <html lang="en">
+                <head>
+                  <!-- Required meta tags -->
+                  <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+              
+                  <!-- <!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Database of Professors</title>
+  </head>
+  <body>
+ rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+              
+                  <title>Database of Professors</title>
+                </head>
+                <body>
+              stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+          
+              <title>Database of Professors</title>
+            </head>
+            <body>
+          navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
         </button>
       
@@ -29,7 +64,9 @@
             <li class="nav-item">
               <a class="nav-link" href="/school_default">Schools</a>
             </li>
-
+            <li class="nav-item">
+              <a class="nav-link" href="/update_existcount">Add a professor</a>
+            </li>
           </ul>
           <form class="form-inline my-2 my-lg-0">
             <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
@@ -47,6 +84,7 @@
             School: {{ professor.get('sname') }} |
             Rating: {{ professor.get('avgRating') }} |
             Difficulty:  {{ professor.get('avgDiff') }} 
+            
 
             <!-- <a href="{{ url_for('prof_info',pid = professor.get('pid')) }}" class="btn">View</a> -->
             <!-- <a href = "{{ url_for('prof_info', pid = professor.get('pid')) }}" class='btn'>view</a> -->
@@ -79,7 +117,8 @@
 
             Difficulty: {{ review.get('difficulty') }} |
             Recommendation: {{ review.get('recommend') }} |
-            Likes: {{ review.get('numOfLikes') }} <br/>
+            Likes: {{ review.get('numOfLikes') }} |
+            <a href = "{{ url_for('add_like', rid = review.get('rid')) }}" class='btn'>Like</a><br/>
             {{ review.get('description') }} <br/>
   
   

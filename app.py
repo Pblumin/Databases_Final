@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from flask_mysqldb import MySQL
+from flask import request
 import MySQLdb.cursors
 import re
 import sys
@@ -22,6 +23,7 @@ mysql = MySQL(app)
 
 #db = SQLAlchemy(app)
 
+############################# LOGIN IN APIS #############################
 @app.route('/')
 @app.route('/login', methods =['GET', 'POST'])
 def login():
@@ -75,41 +77,98 @@ def register():
         msg = 'Please fill out the form !'
     return render_template('register.html', msg = msg)
 
+############################# CLICKING ON PROFESSOR TAB APIS #############################
 @app.route('/professor_default', methods = ['GET', 'POST'])
 def professor_default():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    prof_default_table = q.load_prof_default(cursor)
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_default(cursor)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
 
     return render_template('professors.html', prof_default_table=prof_default_table)
 
 @app.route('/professor_reverse', methods = ['GET', 'POST'])
 def professor_reverse():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    prof_default_table = q.load_prof_reverse(cursor)
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_reverse(cursor)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
 
     return render_template('professors.html', prof_default_table=prof_default_table)
 
 @app.route('/professor_diff', methods = ['GET', 'POST'])
 def professor_diff():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    prof_default_table = q.load_prof_diff(cursor)
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_diff(cursor)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
 
     return render_template('professors.html', prof_default_table=prof_default_table)
 
 @app.route('/professor_diff_reverse', methods = ['GET', 'POST'])
 def professor_diff_reverse():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    prof_default_table = q.load_prof_diff_reverse(cursor)
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_diff_reverse(cursor)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
 
     return render_template('professors.html', prof_default_table=prof_default_table)
 
+@app.route('/professor_abc', methods = ['GET', 'POST'])
+def professor_abc():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_abc(cursor)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+
+    return render_template('professors.html', prof_default_table=prof_default_table)
+
+############################# CLICKING ON SCHOOL TAB APIS #############################
 @app.route('/school_default', methods = ['GET', 'POST'])
 def school_default():
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    school_default_table = q.load_school_default(cursor)
+    input = request.args.get('search')
+    if input == None:
+        school_default_table = q.load_school_default(cursor)
+    else:
+        school_default_table = q.get_school_by_name(cursor,input)
 
     return render_template('schools.html', school_default_table=school_default_table)
 
+@app.route('/school_reverse', methods = ['GET', 'POST'])
+def school_reverse():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    school_default_table = q.load_school_reverse(cursor)
+    input = request.args.get('search')
+    if input == None:
+        school_default_table = q.load_school_reverse(cursor)
+    else:
+        school_default_table = q.get_school_by_name(cursor,input)
+
+    return render_template('schools.html', school_default_table=school_default_table)
+
+@app.route('/school_abc', methods = ['GET', 'POST'])
+def school_abc():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    input = request.args.get('search')
+    if input == None:
+        school_default_table = q.load_school_abc(cursor)
+    else:
+        school_default_table = q.get_prof_by_name(cursor,input)
+
+    return render_template('schools.html', school_default_table=school_default_table)
+
+############################# VIEWING THE PROFESSOR PAGE API #############################
 @app.route('/prof_info/<pid>', methods = ['GET', 'POST'])
 def prof_info(pid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -120,24 +179,132 @@ def prof_info(pid):
 
     return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
 
+@app.route('/add_like/<rid>', methods = ['GET', 'POST'])
+def add_like(rid):
+    uid = session['id']
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    q.add_like(cursor, rid, uid)
+    mysql.connection.commit()
+    print("added like!")
+    pid = q.get_pid(cursor, rid)
+    print("pid value: ", pid)
+    prof_table = q.get_prof_by_id(cursor, pid)
+    class_table = q.get_classes_by_prof(cursor, pid)
+    review_table = q.get_reviews(cursor, pid)
+    rec_perc = q.get_rec_perc(cursor, pid)
+    
+    print()
+
+    return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
+
+############################# CLICKING ON SCHOOL FROM SCHOOL TAB API #############################
 @app.route('/professor_by_school/<sid>', methods = ['GET', 'POST'])
 def professor_by_school(sid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     prof_default_table = q.load_prof_by_school(cursor,sid)
-
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_by_school(cursor,sid)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+        return render_template('professors.html', prof_default_table=prof_default_table)
+    
     return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
 
 @app.route('/professor_by_school_rev/<sid>', methods = ['GET', 'POST'])
 def professor_by_school_rev(sid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-    prof_default_table = q.load_prof_by_school_rev(cursor,sid)
+
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_by_school_rev(cursor,sid)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+        return render_template('professors.html', prof_default_table=prof_default_table)
 
     return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
 
-# @app.route('/professor_by_name/<sid>', methods = ['GET', 'POST'])
-# def professor_by_school_rev(sid):
+@app.route('/professor_by_school_diff/<sid>', methods = ['GET', 'POST'])
+def professor_by_school_diff(sid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_by_school_diff(cursor,sid)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+        return render_template('professors.html', prof_default_table=prof_default_table)
+
+    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+
+@app.route('/professor_by_school_diff_rev/<sid>', methods = ['GET', 'POST'])
+def professor_by_school_diff_rev(sid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_by_school_diff_rev(cursor,sid)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+        return render_template('professors.html', prof_default_table=prof_default_table)
+
+    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+
+@app.route('/professor_by_school_abc/<sid>', methods = ['GET', 'POST'])
+def professor_by_school_abc(sid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_by_school_abc(cursor,sid)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+        return render_template('professors.html', prof_default_table=prof_default_table)
+
+    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+
+############################# LIKES STUFF #############################
+
+
+@app.route('/update_existcount', methods = ['GET', 'POST'])
+def update_existcount():
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    print("gets to first line")
+    
+    profname = request.args.post('profname')
+    profschool = request.args.post('profschool')
+    profclasses = request.args.post('profclasses')
+    print("makes it to here")
+    
+    q.inc_prof_existcount(cursor, profname)
+    # if prof:
+    #     q.add_user(cursor, uname, upass)
+    print("query is good")
+
+    mysql.connection.commit()
+    print("commit is good")
+    msg = 'Professor has Been Updated !'
+    return render_template('update_existcount.html')
+    # else:
+    #     msg = 'Incorrect username / password !'
+    # if input == None:
+        # prof_default_table = q.load_prof_by_school_abc(cursor)
+    # else:
+    # prof_default_table = q.get_prof_by_name(cursor,input)
+    # return render_template('professors.html', prof_default_table=prof_default_table)
+
+    # return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+
+
+# @app.route('/professor_by_name', methods = ['GET', 'POST'])
+# def professor_by_name():
 #     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+#     input = request.form['search']
 #     prof_default_table = q.get_prof_by_name(cursor,input)
+    
+#     print(prof_default_table)
+#     print(input)
+#     return render_template('professors.html', prof_default_table=prof_default_table)
 
 #     if request.method == "POST":
 #         db = MySQLdb.connect(user="root", passwd="", db="cs324", host="127.0.0.1")

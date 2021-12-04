@@ -29,6 +29,9 @@
             <li class="nav-item">
               <a class="nav-link" href="/school_default">Schools</a>
             </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/update_existcount">Add a professor</a>
+            </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Filter
@@ -36,15 +39,17 @@
               <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                 <a class="dropdown-item" href= "{{ url_for('professor_by_school', sid = sid ) }}" >Rating high to low</a>
                 <a class="dropdown-item" href="{{ url_for('professor_by_school_rev', sid = sid ) }}">Rating low to high</a>
-                <a class="dropdown-item" href="#">Difficulty high to low</a>
-                <a class="dropdown-item" href="#">Difficulty low to high</a>
+                <a class="dropdown-item" href="{{ url_for('professor_by_school_diff', sid = sid ) }}">Difficulty high to low</a>
+                <a class="dropdown-item" href="{{ url_for('professor_by_school_diff_rev', sid = sid ) }}">Difficulty low to high</a>
+                <a class="dropdown-item" href="{{ url_for('professor_by_school_abc', sid = sid ) }}">Alphabetical</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#">Something else here</a>
               </div>
             </li>
           </ul>
+          <p>Search By Professor:     </p>
           <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2"  type="search" placeholder="Search" aria-label="Search">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search" id="search" name="search">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>

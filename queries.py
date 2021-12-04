@@ -168,6 +168,19 @@ def load_prof_diff_reverse(cursor):
 
     return prof_default_table
 
+def load_prof_abc(cursor):
+
+    query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM PROFESSOR p, SCHOOL s, REVIEW r
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                GROUP BY p.pid
+                ORDER BY p.pname"""
+
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table
+
 
 def load_prof_by_school(cursor, sid):
 
@@ -194,6 +207,47 @@ def load_prof_by_school_rev(cursor, sid):
     prof_default_table = cursor.fetchall()
 
     return prof_default_table
+
+def load_prof_by_school_diff(cursor, sid):
+
+    q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM PROFESSOR p, SCHOOL s, REVIEW r
+                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+    q2 = """ GROUP BY p.pid
+            ORDER BY avgDiff desc """
+    query = q1 + str(sid) + q2
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table
+
+def load_prof_by_school_diff_rev(cursor, sid):
+
+    q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM PROFESSOR p, SCHOOL s, REVIEW r
+                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+    q2 = """ GROUP BY p.pid
+            ORDER BY avgDiff """
+    query = q1 + str(sid) + q2
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table
+
+def load_prof_by_school_abc(cursor, sid):
+
+    q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM PROFESSOR p, SCHOOL s, REVIEW r
+                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+    q2 = """ GROUP BY p.pid
+            ORDER BY p.pname """
+    query = q1 + str(sid) + q2
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table
+
+
 # Query 2
 # 2. when you click on schools tab see the following:
 #     table that has school and top 3 professors
@@ -204,6 +258,30 @@ def load_school_default(cursor):
                 WHERE p.sid=s.sid
                 GROUP BY s.sid
                 ORDER BY profCnt desc """
+
+    cursor.execute(query)
+    school_default_table = cursor.fetchall()
+
+    return school_default_table
+
+def load_school_reverse(cursor):
+    query = """ SELECT s.sid, s.sname, COUNT(p.pid) as profCnt
+                FROM SCHOOL s, PROFESSOR p
+                WHERE p.sid=s.sid
+                GROUP BY s.sid
+                ORDER BY profCnt """
+
+    cursor.execute(query)
+    school_default_table = cursor.fetchall()
+
+    return school_default_table
+
+def load_school_abc(cursor):
+    query = """ SELECT s.sid, s.sname, COUNT(p.pid) as profCnt
+                FROM SCHOOL s, PROFESSOR p
+                WHERE p.sid=s.sid
+                GROUP BY s.sid
+                ORDER BY s.sname """
 
     cursor.execute(query)
     school_default_table = cursor.fetchall()
@@ -393,15 +471,25 @@ def get_avg_prof_diff(cursor, prof):
 # HAD TO GET RID OF LIKES COUNT FOR NOW CAUSE THERES A ISSUE WHEN THERE R NO LIKES  
 def get_reviews(cursor, pid):
     # likestr = "'%" + prof + "%' "
-    testq = """SELECT r.rid, r.difficulty, r.overall, r.recommend, r.description, count(l.lid) numOfLikes
-            FROM PROFESSOR p, REVIEW r, LIKES l
-            WHERE p.pid=r.pid and l.rid=r.rid and p.pid = 7
-            GROUP BY l.rid
-            ORDER BY numOfLikes desc"""
+  
+    testq = """select t.rid, t.difficulty, t.overall, t.recommend, t.description, count(t.lid) as numOfLikes
+                from (select r.rid, r.pid, l.lid, r.difficulty, r.overall, r.recommend, r.description
+                    from REVIEW r 
+                    LEFT JOIN LIKES l 
+                    on r.rid=l.rid where r.pid=7) as t
+                group by t.rid"""
 
-    q1 = """SELECT r.rid, r.difficulty, r.overall, r.recommend, r.description
-            FROM PROFESSOR p, REVIEW r
-            WHERE p.pid=r.pid and p.pid = """
+    q1 = """SELECT t.rid, t.difficulty, t.overall, t.recommend, t.description, count(t.lid) as numOfLikes
+            FROM (SELECT r.rid, r.pid, l.lid, r.difficulty, r.overall, r.recommend, r.description
+                    FROM REVIEW r 
+                    LEFT JOIN LIKES l 
+                    ON r.rid=l.rid where r.pid="""
+    q2 = """) as t
+                group by t.rid"""
+
+    # q1 = """SELECT r.rid, r.difficulty, r.overall, r.recommend, r.description
+    #         FROM PROFESSOR p, REVIEW r
+    #         WHERE p.pid=r.pid and p.pid = """
     
     # q2 = """ GROUP BY l.rid
     #         ORDER BY numOfLikes desc"""
@@ -412,7 +500,7 @@ def get_reviews(cursor, pid):
     # GROUP BY l.rid
     # ORDER BY numOfLikes desc'''
 
-    query = q1 + str(pid)
+    query = q1 + str(pid) + q2
     cursor.execute(query)
     reviews = cursor.fetchall()
 
@@ -482,10 +570,13 @@ def add_review(cursor):
 # DO LATER WHEN PROF PAGE IS WORKING    
 def add_like(cursor, rid, uid):
 
-    max_id = max_user_id(cursor)
+    max_id = max_likes_id(cursor)
     id = max_id.get('maxID') + 1
+    print("lid: ", id)
+    print("rid: ", rid)
+    print("uid: ", uid)
     
-    cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, rid, uid ))
+    cursor.execute('INSERT INTO LIKES VALUES (% s, % s, % s)', (id, rid, uid ))
 
 # Query 19 - update professor exist count
 
@@ -499,3 +590,15 @@ def inc_prof_existcount(cursor, prof):
 
     
     cursor.execute(r1 + likestr)
+
+def get_pid(cursor, rid):
+
+    q1="""SELECT pid from REVIEW WHERE rid="""
+
+    query = q1 + str(rid) 
+
+    cursor.execute(query)
+    result = cursor.fetchone()
+    pid = result.get('pid')
+
+    return pid

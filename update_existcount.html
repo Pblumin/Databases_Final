@@ -11,7 +11,73 @@
     <title>Database of Professors</title>
   </head>
   <body>
+    <!-- <style>
 
+        /* Button used to open the contact form - fixed at the bottom of the page */
+        .open-button {
+          background-color: #555;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          opacity: 0.8;
+          width: 280px;
+        }
+    
+        /* The popup form - hidden by default */
+        .form-popup {
+          display: none;
+          position: fixed;
+          bottom: 0;
+          right: 15px;
+          border: 3px solid #f1f1f1;
+          z-index: 9;
+        }
+    
+        /* Add styles to the form container */
+        .form-container {
+          max-width: 300px;
+          padding: 10px;
+          background-color: white;
+        }
+    
+        /* Full-width input fields */
+        .form-container input[type=text], .form-container input[type=password] {
+          width: 100%;
+          padding: 15px;
+          margin: 5px 0 22px 0;
+          border: none;
+          background: #f1f1f1;
+        }
+    
+        /* When the inputs get focus, do something */
+        .form-container input[type=text]:focus, .form-container input[type=password]:focus {
+          background-color: #ddd;
+          outline: none;
+        }
+    
+        /* Set a style for the submit/login button */
+        .form-container .btn {
+          background-color: #04AA6D;
+          color: white;
+          padding: 16px 20px;
+          border: none;
+          cursor: pointer;
+          width: 100%;
+          margin-bottom:10px;
+          opacity: 0.8;
+        }
+    
+        /* Add a red background color to the cancel button */
+        .form-container .cancel {
+          background-color: red;
+        }
+    
+        /* Add some hover effects to buttons */
+        .form-container .btn:hover, .open-button:hover {
+          opacity: 1;
+        }
+        </style> -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <a class="navbar-brand" href="/login">{{session.uname}}</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -30,7 +96,7 @@
               <a class="nav-link" href="/school_default">Schools</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/update_existcount">Add a professor</a>
+                <a class="nav-link" href="/update_existcount">Add a professor</a>
             </li>
             <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -53,26 +119,29 @@
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
           </form>
         </div>
-      </nav>
-      
+    </nav>
+
     <div class="container"> 
-        <h1>Professors...</h1>
+        <h1>Is your favorite/least favorite professor not listed?</h1>
+        
+        <div class="form-popup" i   d="myForm">
+          <form action="{{ url_for('update_existscount') }}" class="form-container" method="post">
+            <h2>Enter the Professor's Details Here</h2>
+        
+            <label for="profname"><b>Professor Name</b></label>
+            <input type="text" placeholder="Enter Name" name="profname" required>
+        
+            <label for="profschool"><b>School</b></label>
+            <input type="text" placeholder="Enter School" name="profschool" required>
 
-        <p> 
-          {% for professor in prof_default_table %}
-            <p> ______________________________________________________________________________ </p>
+            <label for="profclasses"><b>Classes</b></label>
+            <input type="text" placeholder="Enter Classes(separate by commas)" name="profclasses" required>
+        
+            <button type="submit" class="btn" href="/update_existscount">Submit</button>
+            <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+          </form>
+        </div>
 
-            {{ professor.get('pname') }} |
-            School: {{ professor.get('sname') }} |
-            Rating: {{ professor.get('avgRating') }} |
-            Difficulty:  {{ professor.get('avgDiff') }} <br/>
-
-            <!-- <a href="{{ url_for('prof_info',pid = professor.get('pid')) }}" class="btn">View</a> -->
-            <a href = "{{ url_for('prof_info', pid = professor.get('pid')) }}" class='btn'>view</a>
-
-          {% endfor %}
-        </p>
-    </div> 
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
