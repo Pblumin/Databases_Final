@@ -19,8 +19,10 @@ app.secret_key = 'you gonna finish that'
 # app.config['MYSQL_PASSWORD'] = 'Password123!'
 # app.config['MYSQL_DB'] = 'RMP_DB'
 app.config['MYSQL_HOST'] = 'localhost' 
-app.config['MYSQL_USER'] = 'paul'
-app.config['MYSQL_PASSWORD'] = 'password'
+# app.config['MYSQL_USER'] = 'paul'
+# app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Mysqlpass123!'
 app.config['MYSQL_DB'] = 'RMP_DB'
 
 mysql = MySQL(app)
@@ -275,22 +277,32 @@ def add_prof_form():
     msg = ''
     if request.method == 'POST' and 'profname' in request.form and 'profschool' in request.form and 'profclasses' in request.form:
         profname = request.form['profname']
+        print(profname,"***")
         # So thinking we could just use these to query for more 
         # specific professors or ignore them entirely - he wont care
         # maybe we could just upadte these to all resulting professors
         # profschool = request.form['profschool']
-        # profclasses = request.form['profclasses']
+        profclasses = request.form['profclasses']
+        profschool = request.form['profschool']
+        print(profschool)
+        print(profclasses)
+
+
 
         # also check if the existcount is actually updated
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-        prof = q.inc_prof_existcount(cursor, profname)
+        prof = 0
+ 
         if prof:
+            prof = q.inc_prof_existcount(cursor, profname)
             msg = 'Thank you for updating the database !'
 
             return render_template('add_prof_form.html', msg = msg)
         else:
-            msg = 'Professor is not in our database'
+            q.add_prof(cursor, profschool, profname)
+            mysql.connection.commit()
+            msg = 'Professor is not in our database but is added now'
     return render_template('add_prof_form.html', msg = msg)
 
    

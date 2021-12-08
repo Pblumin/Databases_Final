@@ -537,14 +537,41 @@ def add_user(cursor, uname, upass):
     
     cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
 
+
+def get_school_sid(cursor, input):
+
+    likestr = "'%" + input + "%' "
+
+    # testquery = """ SELECT s.sname, COUNT(p.pid) as profCnt
+    #             FROM SCHOOL s, PROFESSOR p
+    #             WHERE p.sid=s.sid and s.sname LIKE '%Cooper%'
+    #             GROUP BY s.sid
+    #             ORDER BY profCnt desc """
+    
+    q1= """select s.sid from PROFESSOR p, SCHOOL s 
+    where p.sid=s.sid and s.sname LIKE """
+    
+    q2=""" limit 1"""
+
+    
+    query = q1 + likestr + q2 
+
+    cursor.execute(query)
+    school_sid = cursor.fetchone()
+
+    return school_sid
+
 # Query 15 - add prof
 def add_prof(cursor, school, pname):
 
     max_id = max_prof_id(cursor)
+    print("max id is ",max_id)
     id = max_id.get('maxID') + 1
+    print("id is ",id)
 
-    school_data = get_school_by_name(cursor, school)
-    sid = school_data.get('s.sid')
+    school_data = get_school_sid(cursor, school)
+    print("school data is ", school_data)
+    sid = school_data.get('sid')
 
     cursor.execute('INSERT INTO PROFESSOR VALUES (% s, % s, % s, % s)', 
     (id, sid, pname, 0 ))
@@ -594,6 +621,19 @@ def inc_prof_existcount(cursor, prof):
     return 1;
 
 def get_pid(cursor, rid):
+
+    q1="""SELECT pid from REVIEW WHERE rid="""
+
+    query = q1 + str(rid) 
+
+    cursor.execute(query)
+    result = cursor.fetchone()
+    pid = result.get('pid')
+
+    return pid
+
+
+def check_prof_exists(cursor, rid):
 
     q1="""SELECT pid from REVIEW WHERE rid="""
 
