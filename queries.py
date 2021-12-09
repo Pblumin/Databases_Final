@@ -336,9 +336,7 @@ def get_prof_by_name_initial(cursor, profname):
  
     q1 = """select pid from PROFESSOR where pname="""
 
-
     query = q1 + profname
-    print(query,"****************")
 
     cursor.execute(query)
     prof = cursor.fetchone()
@@ -597,9 +595,7 @@ def add_class(cursor, cname, pname):
     id = max_id.get('maxID') + 1
     
     professor_data = get_prof_by_name_initial(cursor, pname)
-    print(professor_data,"****")
     pid = professor_data.get('pid')
-    print(pid)
 
     cursor.execute('INSERT INTO CLASS VALUES (% s, % s, % s)', 
     (id, pid, cname))
