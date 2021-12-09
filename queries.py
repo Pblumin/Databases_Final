@@ -644,3 +644,21 @@ def check_prof_exists(cursor, rid):
     pid = result.get('pid')
 
     return pid
+
+#this function is used for when a user wants to add a profesor 
+def check_prof_exists_initial(cursor, schoolname, profname):
+    schoolname=str(schoolname)
+    profname=str(profname)
+    query="select count(*) from PROFESSOR p, SCHOOL s where p.sid=s.sid and s.sname='{}' and p.pname='{}' ".format(schoolname,profname)
+
+
+    cursor.execute(query)
+    result = cursor.fetchone()
+    count = result.get('count(*)')
+    print(count, "&&&&&&&&&&&&&&&&")
+    if count <= 0: 
+        return False
+    else:
+        return True
+
+    

@@ -292,13 +292,15 @@ def add_prof_form():
         # also check if the existcount is actually updated
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
 
-        prof = 0
- 
+        prof = q.check_prof_exists_initial(cursor, profschool,profname)
+        #if the prof exists 
         if prof:
             prof = q.inc_prof_existcount(cursor, profname)
+            mysql.connection.commit()
             msg = 'Thank you for updating the database !'
 
             return render_template('add_prof_form.html', msg = msg)
+        #if the prof doesnt exist
         else:
             q.add_prof(cursor, profschool, profname)
             mysql.connection.commit()
