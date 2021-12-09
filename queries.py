@@ -120,7 +120,7 @@ def load_prof_default(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avg(r.overall) desc """
 
@@ -133,7 +133,7 @@ def load_prof_reverse(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avg(r.overall) """
 
@@ -146,7 +146,7 @@ def load_prof_diff(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avgDiff desc """
 
@@ -159,7 +159,7 @@ def load_prof_diff_reverse(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avgDiff"""
 
@@ -172,7 +172,7 @@ def load_prof_abc(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY p.pname"""
 
@@ -299,7 +299,7 @@ def top_3_prof(cursor):
     query = """ SELECT p.pname, s.sname, avg(r.overall) as avgRating,
                 row_number() over (partition by s.sname order by avgRating desc) as rank 
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and rank <= 1"""
+                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2 and rank <= 1"""
     top_3_prof = cursor.fetchall()
 
     return top_3_prof
@@ -316,7 +316,7 @@ def get_prof_by_name(cursor, input):
 
     q1 = """SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
             FROM PROFESSOR p, SCHOOL s, REVIEW r
-            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and p.pname LIKE """
+            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2 and p.pname LIKE """
     
     q2 = """GROUP BY p.pid
             ORDER BY avg(r.overall) desc"""
@@ -328,13 +328,30 @@ def get_prof_by_name(cursor, input):
 
     return prof
 
+
+
+def get_prof_by_name_initial(cursor, profname):
+    
+    profname="'"+str(profname)+"'"
+ 
+    q1 = """select pid from PROFESSOR where pname="""
+
+
+    query = q1 + profname
+    print(query,"****************")
+
+    cursor.execute(query)
+    prof = cursor.fetchone()
+
+    return prof
+
 def get_prof_by_id(cursor, id):
     
     #likestr = str(id)
 
     q1 = """SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
             FROM PROFESSOR p, SCHOOL s, REVIEW r
-            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and p.pid =  """
+            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2 and p.pid =  """
     
 
     query = q1 + str(id)
@@ -386,7 +403,7 @@ def get_prof_by_class(cursor, input):
     
     q1 = """SELECT p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
             FROM PROFESSOR p, SCHOOL s, REVIEW r
-            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount=2 and 
+            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2 and 
                 p.pid = (SELECT c.pid
                         FROM CLASS c
                         WHERE c.cname LIKE """
@@ -565,12 +582,9 @@ def get_school_sid(cursor, input):
 def add_prof(cursor, school, pname):
 
     max_id = max_prof_id(cursor)
-    print("max id is ",max_id)
     id = max_id.get('maxID') + 1
-    print("id is ",id)
 
     school_data = get_school_sid(cursor, school)
-    print("school data is ", school_data)
     sid = school_data.get('sid')
 
     cursor.execute('INSERT INTO PROFESSOR VALUES (% s, % s, % s, % s)', 
@@ -582,8 +596,10 @@ def add_class(cursor, cname, pname):
     max_id = max_class_id(cursor)
     id = max_id.get('maxID') + 1
     
-    professor_data = get_prof_by_name(cursor, pname)
-    pid = professor_data.get('p.pid')
+    professor_data = get_prof_by_name_initial(cursor, pname)
+    print(professor_data,"****")
+    pid = professor_data.get('pid')
+    print(pid)
 
     cursor.execute('INSERT INTO CLASS VALUES (% s, % s, % s)', 
     (id, pid, cname))
@@ -651,11 +667,10 @@ def check_prof_exists_initial(cursor, schoolname, profname):
     profname=str(profname)
     query="select count(*) from PROFESSOR p, SCHOOL s where p.sid=s.sid and s.sname='{}' and p.pname='{}' ".format(schoolname,profname)
 
-
     cursor.execute(query)
     result = cursor.fetchone()
     count = result.get('count(*)')
-    print(count, "&&&&&&&&&&&&&&&&")
+
     if count <= 0: 
         return False
     else:

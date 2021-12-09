@@ -277,17 +277,13 @@ def add_prof_form():
     msg = ''
     if request.method == 'POST' and 'profname' in request.form and 'profschool' in request.form and 'profclasses' in request.form:
         profname = request.form['profname']
-        print(profname,"***")
         # So thinking we could just use these to query for more 
         # specific professors or ignore them entirely - he wont care
         # maybe we could just upadte these to all resulting professors
         # profschool = request.form['profschool']
         profclasses = request.form['profclasses']
         profschool = request.form['profschool']
-        print(profschool)
-        print(profclasses)
-
-
+        classes=profclasses.split(",")
 
         # also check if the existcount is actually updated
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -296,15 +292,18 @@ def add_prof_form():
         #if the prof exists 
         if prof:
             prof = q.inc_prof_existcount(cursor, profname)
-            mysql.connection.commit()
             msg = 'Thank you for updating the database !'
 
-            return render_template('add_prof_form.html', msg = msg)
         #if the prof doesnt exist
         else:
             q.add_prof(cursor, profschool, profname)
-            mysql.connection.commit()
             msg = 'Professor is not in our database but is added now'
+
+        for profclass in classes:
+            q.add_class(cursor, profclass.strip(), profname)
+
+            mysql.connection.commit()
+
     return render_template('add_prof_form.html', msg = msg)
 
    
