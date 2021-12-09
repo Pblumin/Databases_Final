@@ -51,48 +51,14 @@
           </form>
         </div>
       </nav>
-      
-    <div class="container"> 
+
+      <div class="container"> 
         <h1>Schools...</h1>
-        
 
         <p> 
           {% for school in school_default_table %}
             <p> ______________________________________________________________________________ </p>
-            <div class="container"> 
-              <h1>Schools...</h1>
-              <button class="open-button" onclick="openForm()">Open Form</button>
-              
-              <div class="form-popup" id="myForm">
-                <form action="{{ url_for('update_existscount') }}" class="form-container" method="post">
-                  <h1>Enter the Professor's Details</h1>
-              
-                  <label for="profname"><b>Professor Name</b></label>
-                  <input type="text" placeholder="Enter Name" name="profname" required>
-              
-                  <label for="profschool"><b>School</b></label>
-                  <input type="text" placeholder="Enter School" name="profschool" required>
-      
-                  <label for="profclasses"><b>Classes</b></label>
-                  <input type="text" placeholder="Enter Classes(separate by commas)" name="profclasses" required>
-                  <button class="open-button" onclick="openForm()">Open Form</button>
-              
-                  <div class="form-popup" id="myForm">
-                    <form action="{{ url_for('app_prof_form') }}" class="form-container" method="post">
-                      <h1>Enter the Professor's Details</h1>
-                  
-                      <label for="profname"><b>Professor Name</b></label>
-                      <input type="text" placeholder="Enter Name" name="profname" required>
-                  
-                      <label f
-                  <button type="submit" class="btn" href="/add_prof_form">Submit</button>
-                  <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
-                </form>
-              </div>
-      
-              <p> 
-                {% for school in school_default_table %}
-                  <p> _____
+
             {{ school.get('sname') }} |
             Number of Professors: {{ school.get('profCnt') }} <br/>
 
@@ -100,6 +66,7 @@
           {% endfor %}
         </p>
     </div> 
+
 
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->

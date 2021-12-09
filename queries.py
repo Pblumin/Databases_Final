@@ -118,9 +118,16 @@ DONE 19. update professor exist count
 # Query 1
 def load_prof_default(cursor):
 
-    query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+    query1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
                 FROM PROFESSOR p, SCHOOL s, REVIEW r
                 WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
+                GROUP BY p.pid
+                ORDER BY avg(r.overall) desc """
+
+    query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avg(r.overall) desc """
 
@@ -348,9 +355,11 @@ def get_prof_by_id(cursor, id):
     #likestr = str(id)
 
     q1 = """SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-            FROM PROFESSOR p, SCHOOL s, REVIEW r
-            WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2 and p.pid =  """
-    
+            FROM SCHOOL s, PROFESSOR p
+            LEFT JOIN REVIEW r on p.pid=r.pid
+            WHERE p.sid=s.sid and p.existcount>=2 and p.pid =  """
+
+
 
     query = q1 + str(id)
 
@@ -491,7 +500,7 @@ def get_reviews(cursor, pid):
                 from (select r.rid, r.pid, l.lid, r.difficulty, r.overall, r.recommend, r.description
                     from REVIEW r 
                     LEFT JOIN LIKES l 
-                    on r.rid=l.rid where r.pid=7) as t
+                    on r.rid=l.rid where r.pid=31) as t
                 group by t.rid"""
 
     q1 = """SELECT t.rid, t.difficulty, t.overall, t.recommend, t.description, count(t.lid) as numOfLikes
@@ -586,7 +595,7 @@ def add_prof(cursor, school, pname):
     sid = school_data.get('sid')
 
     cursor.execute('INSERT INTO PROFESSOR VALUES (% s, % s, % s, % s)', 
-    (id, sid, pname, 0 ))
+    (id, sid, pname, 1 ))
 
 # Query 16 - add class
 def add_class(cursor, cname, pname):
