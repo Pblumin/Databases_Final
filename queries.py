@@ -141,8 +141,9 @@ def load_prof_default(cursor):
 def load_prof_reverse(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avg(r.overall) """
 
@@ -154,8 +155,9 @@ def load_prof_reverse(cursor):
 def load_prof_diff(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avgDiff desc """
 
@@ -167,8 +169,9 @@ def load_prof_diff(cursor):
 def load_prof_diff_reverse(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY avgDiff"""
 
@@ -180,8 +183,9 @@ def load_prof_diff_reverse(cursor):
 def load_prof_abc(cursor):
 
     query = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and p.existcount>=2
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2
                 GROUP BY p.pid
                 ORDER BY p.pname"""
 
@@ -194,8 +198,9 @@ def load_prof_abc(cursor):
 def load_prof_by_school(cursor, sid):
 
     q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2 and s.sid = """
     q2 = """ GROUP BY p.pid
             ORDER BY avg(r.overall) desc """
     query = q1 + str(sid) + q2
@@ -207,8 +212,9 @@ def load_prof_by_school(cursor, sid):
 def load_prof_by_school_rev(cursor, sid):
 
     q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2 and s.sid = """
     q2 = """ GROUP BY p.pid
             ORDER BY avg(r.overall) """
     query = q1 + str(sid) + q2
@@ -220,8 +226,9 @@ def load_prof_by_school_rev(cursor, sid):
 def load_prof_by_school_diff(cursor, sid):
 
     q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and s.sid = """
     q2 = """ GROUP BY p.pid
             ORDER BY avgDiff desc """
     query = q1 + str(sid) + q2
@@ -233,8 +240,9 @@ def load_prof_by_school_diff(cursor, sid):
 def load_prof_by_school_diff_rev(cursor, sid):
 
     q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2 and s.sid = """
     q2 = """ GROUP BY p.pid
             ORDER BY avgDiff """
     query = q1 + str(sid) + q2
@@ -246,8 +254,9 @@ def load_prof_by_school_diff_rev(cursor, sid):
 def load_prof_by_school_abc(cursor, sid):
 
     q1 = """ SELECT p.pid, p.pname, s.sname, avg(r.overall) as avgRating, avg(r.difficulty) as avgDiff
-                FROM PROFESSOR p, SCHOOL s, REVIEW r
-                WHERE p.sid=s.sid and r.pid=p.pid and s.sid = """
+                FROM  SCHOOL s, PROFESSOR p 
+                LEFT JOIN REVIEW r on p.pid=r.pid
+                WHERE p.sid=s.sid and p.existcount>=2 and s.sid = """
     q2 = """ GROUP BY p.pid
             ORDER BY p.pname """
     query = q1 + str(sid) + q2
@@ -657,18 +666,18 @@ def add_like(cursor, rid, uid):
 
 # Query 19 - update professor exist count
 
-def inc_prof_existcount(cursor, prof):
+def inc_prof_existcount(cursor, pid):
     
-    r1 = 'UPDATE PROFESSOR as p \
-        SET existcount = existcount + 1 \
-        WHERE p.pname LIKE '
+    r1 = """UPDATE PROFESSOR as p 
+            SET existcount = existcount + 1 
+            WHERE p.pid= """
 
-    likestr = "'%" + prof + "%'"
+    # likestr = "'%" + prof + "%'"
 
     
-    cursor.execute(r1 + likestr)
+    cursor.execute(r1 + str(pid))
 
-    return 1;
+    return 1
 
 def get_pid(cursor, rid):
 
@@ -710,4 +719,14 @@ def check_prof_exists_initial(cursor, schoolname, profname):
     else:
         return True
 
-    
+def load_pending_prof(cursor, sid):
+
+    q1 = """ SELECT p.pid, p.pname, s.sname, s.sid
+                FROM  SCHOOL s, PROFESSOR p 
+                WHERE p.sid=s.sid and p.existcount<2 and s.sid = """
+
+    query = q1 + str(sid)
+    cursor.execute(query)
+    prof_default_table = cursor.fetchall()
+
+    return prof_default_table

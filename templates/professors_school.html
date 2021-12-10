@@ -56,8 +56,19 @@
       </nav>
       
     <div class="container"> 
-        <h1>Professors...</h1>
+        <h1>Pending Professors (Please confirm they are in this school!)</h1>
+        <p> 
+          {% for professor in pending_prof_table %}
+            <p> ______________________________________________________________________________ </p>
 
+            {{ professor.get('pname') }} |
+            School: {{ professor.get('sname') }} <br/>
+
+            <a href = "{{ url_for('update_exists', sid = professor.get('sid'), pid = professor.get('pid')) }}" class='btn'>confirm</a>
+
+          {% endfor %}
+        </p>
+        <h1>All Professors...</h1>
         <p> 
           {% for professor in prof_default_table %}
             <p> ______________________________________________________________________________ </p>

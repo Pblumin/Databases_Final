@@ -14,15 +14,16 @@ app.run(debug=False)
 app.secret_key = 'you gonna finish that'
 
 ############### CHANGE THIS FOR UR SPECIC MACHINE ###############
-# app.config['MYSQL_HOST'] = 'localhost' 
-# app.config['MYSQL_USER'] = 'root'
-# app.config['MYSQL_PASSWORD'] = 'Password123!'
-# app.config['MYSQL_DB'] = 'RMP_DB'
 app.config['MYSQL_HOST'] = 'localhost' 
-app.config['MYSQL_USER'] = 'paul'
-app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Password123!'
+# app.config['MYSQL_DB'] = 'RMP_DB'
+# app.config['MYSQL_HOST'] = 'localhost' 
+# app.config['MYSQL_USER'] = 'paul'
+# app.config['MYSQL_PASSWORD'] = 'password'
 # app.config['MYSQL_USER'] = 'root'
 # app.config['MYSQL_PASSWORD'] = 'Mysqlpass123!'
+
 app.config['MYSQL_DB'] = 'RMP_DB'
 
 mysql = MySQL(app)
@@ -302,6 +303,22 @@ def add_like(rid):
     return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
 
 ############################# CLICKING ON SCHOOL FROM SCHOOL TAB API #############################
+@app.route('/professor_by_school/<sid>/<pid>', methods = ['GET', 'POST'])
+def update_exists(sid,pid):
+    cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
+    prof_default_table = q.load_prof_by_school(cursor,sid)
+    q.inc_prof_existcount(cursor,pid)
+    mysql.connection.commit()
+    input = request.args.get('search')
+    if input == None:
+        prof_default_table = q.load_prof_by_school(cursor,sid)
+        pending_prof_table = q.load_pending_prof(cursor,sid)
+    else:
+        prof_default_table = q.get_prof_by_name(cursor,input)
+        return render_template('professors.html', prof_default_table=prof_default_table)
+    
+    return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
+
 @app.route('/professor_by_school/<sid>', methods = ['GET', 'POST'])
 def professor_by_school(sid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
@@ -309,11 +326,14 @@ def professor_by_school(sid):
     input = request.args.get('search')
     if input == None:
         prof_default_table = q.load_prof_by_school(cursor,sid)
+        pending_prof_table = q.load_pending_prof(cursor,sid)
     else:
         prof_default_table = q.get_prof_by_name(cursor,input)
         return render_template('professors.html', prof_default_table=prof_default_table)
     
-    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+    return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
+
+
 
 @app.route('/professor_by_school_rev/<sid>', methods = ['GET', 'POST'])
 def professor_by_school_rev(sid):
@@ -322,11 +342,12 @@ def professor_by_school_rev(sid):
     input = request.args.get('search')
     if input == None:
         prof_default_table = q.load_prof_by_school_rev(cursor,sid)
+        pending_prof_table = q.load_pending_prof(cursor,sid)
     else:
         prof_default_table = q.get_prof_by_name(cursor,input)
         return render_template('professors.html', prof_default_table=prof_default_table)
 
-    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+    return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
 
 @app.route('/professor_by_school_diff/<sid>', methods = ['GET', 'POST'])
 def professor_by_school_diff(sid):
@@ -335,11 +356,12 @@ def professor_by_school_diff(sid):
     input = request.args.get('search')
     if input == None:
         prof_default_table = q.load_prof_by_school_diff(cursor,sid)
+        pending_prof_table = q.load_pending_prof(cursor,sid)
     else:
         prof_default_table = q.get_prof_by_name(cursor,input)
         return render_template('professors.html', prof_default_table=prof_default_table)
 
-    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+    return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
 
 @app.route('/professor_by_school_diff_rev/<sid>', methods = ['GET', 'POST'])
 def professor_by_school_diff_rev(sid):
@@ -348,11 +370,12 @@ def professor_by_school_diff_rev(sid):
     input = request.args.get('search')
     if input == None:
         prof_default_table = q.load_prof_by_school_diff_rev(cursor,sid)
+        pending_prof_table = q.load_pending_prof(cursor,sid)
     else:
         prof_default_table = q.get_prof_by_name(cursor,input)
         return render_template('professors.html', prof_default_table=prof_default_table)
 
-    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+    return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
 
 @app.route('/professor_by_school_abc/<sid>', methods = ['GET', 'POST'])
 def professor_by_school_abc(sid):
@@ -361,11 +384,12 @@ def professor_by_school_abc(sid):
     input = request.args.get('search')
     if input == None:
         prof_default_table = q.load_prof_by_school_abc(cursor,sid)
+        pending_prof_table = q.load_pending_prof(cursor,sid)
     else:
         prof_default_table = q.get_prof_by_name(cursor,input)
         return render_template('professors.html', prof_default_table=prof_default_table)
 
-    return render_template('professors_school.html', prof_default_table=prof_default_table, sid=sid)
+    return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
 
 ############################# LIKES STUFF #############################
 
