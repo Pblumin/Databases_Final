@@ -13,33 +13,37 @@
   <body>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="/login">{{session.uname}}</a>
+      <a class="navbar-brand" href="/login">{{session.uname}}</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>  
+      <!-- <a class="navbar-brand" href="/login">{{session.uname}}</a>
         <button class="<!doctype html>
-          <html lang="en">
-            <head>
+          <html lang="en"> -->
+            <!--  <head> -->
               <!-- Required meta tags -->
-              <meta charset="utf-8">
+              <!-- <meta charset="utf-8">
               <meta name="<!doctype html>
               <html lang="en">
-                <head>
+                <head> -->
                   <!-- Required meta tags -->
-                  <meta charset="utf-8">
-                  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-              
+                  <!-- <meta charset="utf-8">
+                  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
+               
                   <!-- <!doctype html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> -->
 
     <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>Database of Professors</title>
   </head>
-  <body>
- rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <body> -->
+ <!-- rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
               
                   <title>Database of Professors</title>
                 </head>
@@ -48,10 +52,10 @@
           
               <title>Database of Professors</title>
             </head>
-            <body>
-          navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
+            <body> -->
+          <!-- navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span> -->
+        <!-- </button> -->
       
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto">
@@ -78,18 +82,12 @@
     <div class="container"> 
 
         <p> 
-          {% for professor in prof_table %}
-            <h1>{{ professor.get('pname') }}</h1><br/>
-
-            School: {{ professor.get('sname') }} |
-            Rating: {{ professor.get('avgRating') }} |
-            Difficulty:  {{ professor.get('avgDiff') }} 
+            <h1>{{ prof_table.get('pname') }}</h1><br/>
             
-
-            <!-- <a href="{{ url_for('prof_info',pid = professor.get('pid')) }}" class="btn">View</a> -->
-            <!-- <a href = "{{ url_for('prof_info', pid = professor.get('pid')) }}" class='btn'>view</a> -->
-
-          {% endfor %}
+            School: {{ prof_table.get('sname') }} |
+            Rating: {{ prof_table.get('avgRating') }} |
+            Difficulty:  {{ prof_table.get('avgDiff') }} 
+            
         </p>
 
         <p> 
@@ -124,9 +122,43 @@
   
             {% endfor %}
         </p>
-
+        
     </div> 
 
+    <div class="form-popup" id="myForm">
+      <form action="{{ url_for('prof_info', pid = prof_table.get('pid')) }}" class="form-container" method="post">
+        <h2>Enter the Review Details Here</h2>
+        <div class="msg">{{ msg }}</div>
+        <label for="overall"><b>Overall Rating</b></label>
+        <input type="text" placeholder="Enter Rating(1-5 out of 5)" name="overall" required></br></br>
+    
+        <label for="difficulty"><b>Difficulty</b></label>
+        <input type="text" placeholder="Enter Difficulty(1-5 out of 5)" name="difficulty" required></br></br>
+
+        <label for="recommendation"><b>Would you take Again</b></label><br>
+        <input type="radio" name="recommendation" id="Yes" value=1> Yes </input><br> 
+        <input type="radio" name="recommendation" id="No" value=0> No </input><br> 
+
+  
+        <label for="description"><b>Other Thoughts?</b></label>
+        <input type="text" placeholder="Feel Free to Leave a Comment" name="description"></br></br>
+
+        <button type="submit" class="btn">Submit</button>
+        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
+        
+        
+      </form>
+    </div>
+
+    <script>
+      function openForm() {
+        document.getElementById("myForm").style.display = "block";
+      }
+      
+      function closeForm() {
+        document.getElementById("myForm").style.display = "none";
+      }
+    </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>

@@ -1,3 +1,5 @@
+from flask import session
+
 # LOGIN QUERIES
 def login_query(cursor, username, password):
     cursor.execute('SELECT * \
@@ -364,7 +366,7 @@ def get_prof_by_id(cursor, id):
     query = q1 + str(id)
 
     cursor.execute(query)
-    prof = cursor.fetchall()
+    prof = cursor.fetchone()
 
     return prof
 
@@ -561,6 +563,28 @@ def add_user(cursor, uname, upass):
     
     cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
 
+def get_professor_pid(cursor, input):
+
+    likestr = "'%" + input + "%' "
+
+    # testquery = """ SELECT s.sname, COUNT(p.pid) as profCnt
+    #             FROM SCHOOL s, PROFESSOR p
+    #             WHERE p.sid=s.sid and s.sname LIKE '%Cooper%'
+    #             GROUP BY s.sid
+    #             ORDER BY profCnt desc """
+    
+    q1= """select s.sid from PROFESSOR p, SCHOOL s 
+    where p.sid=s.sid and s.sname LIKE """
+    
+    q2=""" limit 1"""
+
+    
+    query = q1 + likestr + q2 
+
+    cursor.execute(query)
+    school_sid = cursor.fetchone()
+
+    return school_sid
 
 def get_school_sid(cursor, input):
 
@@ -610,7 +634,12 @@ def add_class(cursor, cname, pname):
     (id, pid, cname))
 
 # DO LATER WHEN PROF PAGE IS WORKING    
-def add_review(cursor):
+def add_review(cursor, overall, difficulty, recommendation, description, pid,  uid):
+    max_id = max_rev_id(cursor)
+    id = max_id.get('maxID') + 1
+
+    cursor.execute('INSERT INTO REVIEW VALUES (% s, % s, % s, % s,% s, % s, % s)', 
+    (id, pid, uid, difficulty, overall, recommendation, description))
     pass
 
 # Query 18 - add a like
