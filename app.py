@@ -15,12 +15,12 @@ app.secret_key = 'you gonna finish that'
 
 ############### CHANGE THIS FOR UR SPECIC MACHINE ###############
 app.config['MYSQL_HOST'] = 'localhost' 
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'Password123!'
+# app.config['MYSQL_USER'] = 'root'
+# app.config['MYSQL_PASSWORD'] = 'Password123!'
 # app.config['MYSQL_DB'] = 'RMP_DB'
 # app.config['MYSQL_HOST'] = 'localhost' 
-# app.config['MYSQL_USER'] = 'paul'
-# app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_USER'] = 'paul'
+app.config['MYSQL_PASSWORD'] = 'password'
 # app.config['MYSQL_USER'] = 'root'
 # app.config['MYSQL_PASSWORD'] = 'Mysqlpass123!'
 

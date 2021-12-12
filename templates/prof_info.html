@@ -92,8 +92,11 @@
 
         <p> 
             {% for percent in rec_perc %}  
-              {{ percent.get('rec_prec') }}% of reviews recommend this professor
-  
+              {% if percent.get('rec_prec') is number %}
+                {{ '%0.2f'| format(percent.get('rec_prec')) }}% of reviews recommend this professor   
+              {% else %}
+                No current reviews
+              {% endif %}
             {% endfor %}
         </p>
 
@@ -115,7 +118,11 @@
             
             Rating: {{ review.get('overall') }} |
             Difficulty: {{ review.get('difficulty') }} |
-            Recommendation: {{ review.get('recommend') }} |
+            {% if review.get('recommend') == 1 %}
+              Recommendation: {{ 'Yes' }} |
+            {% else %}
+              Recommendation: {{ 'No' }} | 
+            {% endif %}
             Likes: {{ review.get('numOfLikes') }} |
             <a href = "{{ url_for('add_like', rid = review.get('rid')) }}" class='btn'>Like</a><br/>
             {{ review.get('description') }} <br/>
@@ -142,10 +149,11 @@
 
   
         <label for="description"><b>Other Thoughts?</b></label>
-        <input type="text" placeholder="Feel Free to Leave a Comment" name="description" style="width:300px; height: 100px;"></br></br>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <textarea type="text" placeholder="Feel Free to Leave a Comment" name="description"  ></textarea></br></br>
 
         <button type="submit" class="btn">Submit</button>
-        <button type="button" class="btn cancel" onclick="closeForm()">Close</button>
         
         
       </form>
@@ -156,9 +164,7 @@
         document.getElementById("myForm").style.display = "block";
       }
       
-      function closeForm() {
-        document.getElementById("myForm").style.display = "none";
-      }
+      
     </script>
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
