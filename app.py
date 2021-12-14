@@ -4,7 +4,6 @@ from flask import request
 import MySQLdb.cursors
 import re
 import sys
-#from flask_sqlalchemy import SQLAlchemy
 import db_model
 import queries as q
 
@@ -19,16 +18,14 @@ app.config['MYSQL_HOST'] = 'localhost'
 # app.config['MYSQL_PASSWORD'] = 'Password123!'
 # app.config['MYSQL_DB'] = 'RMP_DB'
 # app.config['MYSQL_HOST'] = 'localhost' 
-app.config['MYSQL_USER'] = 'paul'
-app.config['MYSQL_PASSWORD'] = 'password'
-# app.config['MYSQL_USER'] = 'root'
-# app.config['MYSQL_PASSWORD'] = 'Mysqlpass123!'
+#app.config['MYSQL_USER'] = 'paul'
+#app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'Mysqlpass123!'
 
 app.config['MYSQL_DB'] = 'RMP_DB'
 
 mysql = MySQL(app)
-
-#db = SQLAlchemy(app)
 
 ############################# LOGIN IN APIS #############################
 @app.route('/')
@@ -39,8 +36,6 @@ def login():
         username = request.form['uname']
         password = request.form['upass']
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        # cursor.execute('SELECT * FROM USER WHERE uname = % s AND upass = % s', (username, password, ))
-        # user = cursor.fetchone()
         user = q.login_query(cursor,username,password)
         if user:
             session['loggedin'] = True
@@ -76,7 +71,7 @@ def register():
         elif not uname or not upass:
             msg = 'Please fill out the form !'
         else:
-            #cursor.execute('INSERT INTO USER VALUES (% s, % s, % s)', (id, uname, upass ))
+          
             q.add_user(cursor, uname, upass)
             mysql.connection.commit()
             msg = 'You have successfully registered !'
@@ -180,7 +175,6 @@ def school_abc():
 def prof_info(pid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     
-
     if request.method == 'POST' and 'overall' in request.form and 'difficulty' in request.form and 'recommendation' in request.form and 'description' in request.form:
         
         
@@ -191,10 +185,7 @@ def prof_info(pid):
         uid = session['id']
 
         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-        # print("Overall: ", overall)
-        # print("Difficulty: ", difficulty)
-        # print("Recommendation: ", recommendation)
-        # print("Description: ", description)
+
         q.add_review(cursor, overall, difficulty, recommendation, description, pid, uid)
         prof_table = q.get_prof_by_id(cursor, pid)
         class_table = q.get_classes_by_prof(cursor, pid)
@@ -213,75 +204,6 @@ def prof_info(pid):
 
     return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
 
-# def add_review_form(pid):
-#     if request.method == 'POST' and 'overall' in request.form and 'difficulty' in request.form and 'recommendation' in request.form and 'description' in request.form:
-#         # profname = request.form['profname']
-#         # So thinking we could just use these to query for more 
-#         # specific professors or ignore them entirely - he wont care
-#         # maybe we could just upadte these to all resulting professors
-#         # profschool = request.form['profschool']
-#         overall = request.form['overall']
-#         difficulty = request.form['difficulty']
-#         recommendation = request.form['recommendation']
-#         description = request.form['description']
-# def add_review_form(pid):
-#     if request.method == 'POST' and 'overall' in request.form and 'difficulty' in request.form and 'recommendation' in request.form and 'description' in request.form:
-#         # profname = request.form['profname']
-#         # So thinking we could just use these to query for more 
-#         # specific professors or ignore them entirely - he wont care
-#         # maybe we could just upadte these to all resulting professors
-#         # profschool = request.form['profschool']
-#         overall = request.form['overall']
-#         difficulty = request.form['difficulty']
-#         recommendation = 
-#         # also check if the existcount is actually updated
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-
-#         # prof = q.check_prof_exists_initial(cursor, overall, difficulty, recommendation, description)
-#         #if the prof exists 
-#         # if prof:
-#         #     prof = q.inc_prof_existcount(cursor, profname)
-#         #     msg = 'Thank you for updating the database !'
-
-#         #if the prof doesnt exist
-#         # else:
-#         q.add_review(cursor, overaldef add_review_form(pid):
-#     if request.method == 'POST' and 'overall' in request.form and 'difficulty' in request.form and 'recommendation' in request.form and 'description' in request.form:
-#         # profname = request.form['profname']
-#         # So thinking we could just use these to query for more 
-#         # specific professors or ignore them entirely - he wont care
-#         # maybe we could just upadte these to all resulting professors
-#         # profschool = request.form['profschool']
-#         overall = request.form['overall']
-#         difficulty = request.form['difficulty']
-#         recommendation = request.form['recommendation']
-#         description = request.form['description']
-
-#         # also check if the existcount is actually updated
-#         cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
-
-#         # prof = q.check_prof_exists_initial(cursor, overall, difficulty, recommendation, description)
-#         #if the prof exists 
-#         # if prof:
-#         #     prof = q.inc_prof_existcount(cursor, profname)
-#         #     msg = 'Thank you for updating the database !'
-
-# l, difficulty, recommendation, description, pid)
-#         msg = 'Review Uploaded'
-
-#         # for profclass in classes:
-#         #     q.add_class(cursor, profclass.strip(), profname)
-
-#         prof_table = q.get_prof_by_id(cursor, pid)
-#         class_table = q.get_classes_by_prof(cursor, pid)
-#         review_table = q.get_reviews(cursor, pid)
-#         rec_perc = q.get_rec_perc(cursor, pid)
-
-#         mysql.connection.commit()
-#     else:
-
-#     return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
-
 
 
 @app.route('/add_like/<rid>', methods = ['GET', 'POST'])
@@ -290,15 +212,11 @@ def add_like(rid):
     cursor = mysql.connection.cursor(MySQLdb.cursors.DictCursor)
     q.add_like(cursor, rid, uid)
     mysql.connection.commit()
-    print("added like!")
     pid = q.get_pid(cursor, rid)
-    print("pid value: ", pid)
     prof_table = q.get_prof_by_id(cursor, pid)
     class_table = q.get_classes_by_prof(cursor, pid)
     review_table = q.get_reviews(cursor, pid)
     rec_perc = q.get_rec_perc(cursor, pid)
-    
-    print()
 
     return render_template('prof_info.html', prof_table=prof_table, class_table=class_table, review_table=review_table, rec_perc=rec_perc)
 
@@ -391,7 +309,7 @@ def professor_by_school_abc(sid):
 
     return render_template('professors_school.html', prof_default_table=prof_default_table, pending_prof_table=pending_prof_table, sid=sid)
 
-############################# LIKES STUFF #############################
+############################# ADDING PROF #############################
 
 
 @app.route('/add_prof_form', methods = ['GET','POST'])
@@ -399,10 +317,6 @@ def add_prof_form():
     msg = ''
     if request.method == 'POST' and 'profname' in request.form and 'profschool' in request.form and 'profclasses' in request.form:
         profname = request.form['profname']
-        # So thinking we could just use these to query for more 
-        # specific professors or ignore them entirely - he wont care
-        # maybe we could just upadte these to all resulting professors
-        # profschool = request.form['profschool']
         profclasses = request.form['profclasses']
         profschool = request.form['profschool']
         classes=profclasses.split(",")
@@ -427,4 +341,3 @@ def add_prof_form():
             mysql.connection.commit()
 
     return render_template('add_prof_form.html', msg = msg)
-# /<pid>

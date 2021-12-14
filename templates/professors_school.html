@@ -42,8 +42,8 @@
                 <a class="dropdown-item" href="{{ url_for('professor_by_school_diff', sid = sid ) }}">Difficulty high to low</a>
                 <a class="dropdown-item" href="{{ url_for('professor_by_school_diff_rev', sid = sid ) }}">Difficulty low to high</a>
                 <a class="dropdown-item" href="{{ url_for('professor_by_school_abc', sid = sid ) }}">Alphabetical</a>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#">Something else here</a>
+           
+             
               </div>
             </li>
           </ul>
@@ -78,7 +78,6 @@
             Rating: {{ professor.get('avgRating') }} |
             Difficulty:  {{ professor.get('avgDiff') }} <br/>
 
-            <!-- <a href="{{ url_for('prof_info',pid = professor.get('pid')) }}" class="btn">View</a> -->
             <a href = "{{ url_for('prof_info', pid = professor.get('pid')) }}" class='btn'>view</a>
 
           {% endfor %}
